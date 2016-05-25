@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.invictum</groupId>
     <artifactId>unified-test-core</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -30,7 +30,7 @@
         <connection>scm:git:git@github.com:Invictum/unified-test-core.git</connection>
         <developerConnection>scm:git:git@github.com:Invictum/unified-test-core.git</developerConnection>
         <url>git@github.com:Invictum/unified-test-core.git</url>
-        <tag>unified-test-core-0.1.10</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
