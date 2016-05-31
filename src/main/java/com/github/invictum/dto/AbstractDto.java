@@ -12,8 +12,8 @@ import java.util.List;
 
 public class AbstractDto {
 
-    public static final boolean FULL_DTO_VIEW = Boolean.valueOf(PropertiesUtil.getProperty(
-            EnhancedSystemProperty.FullDtoView));
+    public static final boolean FULL_DTO_VIEW = Boolean
+            .valueOf(PropertiesUtil.getProperty(EnhancedSystemProperty.FullDtoView));
 
     private String extractData(Object object, Field attribute) {
         attribute.setAccessible(true);
@@ -47,12 +47,13 @@ public class AbstractDto {
     @Override
     public String toString() {
         String stringView = "";
-        for (Attribute attribute : getData(this, FULL_DTO_VIEW)) {
+        List<Attribute> data = getData(this, FULL_DTO_VIEW);
+        if (data.isEmpty()) {
+            return "{null}";
+        }
+        for (Attribute attribute : data) {
             String value = attribute.getValue();
             stringView += String.format("%s: %s, ", attribute.getName(), value == null ? "null" : value);
-        }
-        if (stringView.isEmpty()) {
-            return super.toString();
         }
         return String.format("{%s}", stringView.substring(0, stringView.length() - 2));
     }
@@ -69,6 +70,6 @@ public class AbstractDto {
 
     @Override
     public int hashCode() {
-        return toString().hashCode();
+        return getData(this, true).hashCode();
     }
 }

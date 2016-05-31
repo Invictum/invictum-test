@@ -1,7 +1,7 @@
 package com.github.invictum.fixtures;
 
-import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.Log;
+import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
@@ -10,7 +10,8 @@ import java.util.*;
 
 public class FixtureProcessor {
 
-    public static final String FIXTURES_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.FixturesPackageName);
+    public static final String FIXTURES_PACKAGE = PropertiesUtil
+            .getProperty(EnhancedSystemProperty.FixturesPackageName);
 
     private static Set<Class<? extends AbstractFixture>> availableFixtureClasses = new HashSet<>();
     private static Queue<Fixture> registeredFixtures = new ArrayDeque<>();

@@ -8,7 +8,7 @@ public enum EnhancedSystemProperty {
     FullDtoView("full.dto.view", "false"),
     PagesPackageName("pages.package.name", "org.example.pages"),
     PanelsPackageName("panels.package.name", "org.example.panels"),
-    FixturesPackageName("panels.package.name", "org.example.fixtures"),
+    FixturesPackageName("fixtures.package.name", "org.example.fixtures"),
     LayoutExpectedDirectory("layout.expected.directory", "src/test/resources/images/"),
     LayoutResultsDirectory("layout.results.directory", "target/layout/results/"),
     LayoutImageExtension("layout.image.extension", "png"),

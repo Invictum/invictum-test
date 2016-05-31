@@ -3,16 +3,16 @@ package com.github.invictum.pages;
 import com.github.invictum.panels.AbstractPanel;
 import com.github.invictum.panels.PanelFactory;
 import com.github.invictum.tricks.Visibility;
+import com.github.invictum.tricks.Wait;
 import com.github.invictum.tricks.core.AbstractTrick;
+import com.github.invictum.tricks.core.TrickFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderUtil;
+import com.github.invictum.utils.url.EnhancedPageUrls;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.WhenPageOpens;
 import net.thucydides.core.pages.PageObject;
-import com.github.invictum.utils.url.EnhancedPageUrls;
-import com.github.invictum.tricks.Wait;
-import com.github.invictum.tricks.core.TrickFactory;
 
 import java.util.List;
 
