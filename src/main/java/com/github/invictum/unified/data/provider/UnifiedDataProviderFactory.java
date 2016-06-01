@@ -31,4 +31,9 @@ public class UnifiedDataProviderFactory {
         parser = parserToSet;
         Log.info("Set parser to {}", parserToSet.getClass().getSimpleName());
     }
+
+    public static void restCache() {
+        locatorProviders = new HashMap<>();
+        Log.debug("Cache has been reset.");
+    }
 }
