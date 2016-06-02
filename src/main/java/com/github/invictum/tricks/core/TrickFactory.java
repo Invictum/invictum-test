@@ -11,6 +11,7 @@ public class TrickFactory {
             trick.setContext(context);
         } catch (ReflectiveOperationException e) {
             Log.error("Failed to init {} trick", trickClass);
+            throw new IllegalStateException(e.getMessage());
         }
         return trick;
     }

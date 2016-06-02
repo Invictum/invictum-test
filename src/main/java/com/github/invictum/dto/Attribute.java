@@ -17,6 +17,11 @@ public class Attribute {
     }
 
     @Override
+    public String toString() {
+        return String.format("{name: %s, value: %s}", name != null ? name : "null", value != null ? value : "null");
+    }
+
+    @Override
     public int hashCode() {
         return String.format("%s%s", name, value).hashCode();
     }
