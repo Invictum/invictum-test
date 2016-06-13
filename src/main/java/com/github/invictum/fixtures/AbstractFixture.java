@@ -21,7 +21,14 @@ public abstract class AbstractFixture implements Fixture {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName();
+        String paramSting = "";
+        if (params != null) {
+            for (String param : params) {
+                paramSting += String.format("%s ", param);
+            }
+        }
+        paramSting = paramSting.trim();
+        return String.format("%s {%s}", getClass().getSimpleName(), paramSting);
     }
 
     protected String getParam(int paramIndex) {

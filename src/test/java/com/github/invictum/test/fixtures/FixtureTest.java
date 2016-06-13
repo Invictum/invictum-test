@@ -27,6 +27,6 @@ public class FixtureTest {
 
     @Test
     public void toStringTest() {
-        assertThat("Fixture name is wrong.", fixture.toString(), equalTo("ExampleFixture"));
+        assertThat("Fixture name is wrong.", fixture.toString(), equalTo("ExampleFixture {}"));
     }
 }

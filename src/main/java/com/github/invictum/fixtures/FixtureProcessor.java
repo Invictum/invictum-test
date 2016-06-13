@@ -14,7 +14,12 @@ public class FixtureProcessor {
             .getProperty(EnhancedSystemProperty.FixturesPackageName);
 
     private static Set<Class<? extends AbstractFixture>> availableFixtureClasses = new HashSet<>();
-    private static Queue<Fixture> registeredFixtures = new ArrayDeque<>();
+    private static ThreadLocal<Queue<Fixture>> registeredFixtures = new ThreadLocal<Queue<Fixture>>() {
+        @Override
+        protected Queue<Fixture> initialValue() {
+            return new ArrayDeque<>();
+        }
+    };
 
     static {
         Reflections reflections = new Reflections(ClasspathHelper.forPackage(FIXTURES_PACKAGE));
@@ -31,7 +36,7 @@ public class FixtureProcessor {
                         fixture.setParams(prepareParams(annotation.getValue()));
                         Log.info("Applying {} fixture", fixture);
                         fixture.prepareCondition();
-                        registeredFixtures.add(fixture);
+                        registeredFixtures.get().add(fixture);
                     } catch (ReflectiveOperationException e) {
                         Log.error("Failed to apply {} fixture", fixtureClass);
                     }
@@ -41,11 +46,15 @@ public class FixtureProcessor {
     }
 
     public static void rollback() {
-        while (registeredFixtures.size() > 0) {
-            Fixture fixture = registeredFixtures.poll();
+        while (registeredFixtures.get().size() > 0) {
+            Fixture fixture = registeredFixtures.get().poll();
             Log.info("Rollback for {} fixture", fixture);
             fixture.rollbackCondition();
         }
+    }
+
+    public static Queue<Fixture> getRegisteredFixtures() {
+        return registeredFixtures.get();
     }
 
     private static String[] prepareParams(String paramsString) {

@@ -1,8 +1,8 @@
 package com.github.invictum.utils.url;
 
-import net.serenitybdd.core.Serenity;
 import com.github.invictum.Log;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import net.serenitybdd.core.Serenity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,13 +46,13 @@ public class UrlUtil {
         return replaceHost(baseUrl, getPageUrlByKey(baseUrlKey));
     }
 
-    private static String processSuffix(final Map<String, String> avaliableUrls, final String urlKey) {
-        if (avaliableUrls.containsKey(urlKey)) {
-            return avaliableUrls.get(urlKey);
-        } else if (!avaliableUrls.containsKey(DEFAULT_URL_KEY)) {
+    private static String processSuffix(final Map<String, String> availableUrls, final String urlKey) {
+        if (availableUrls.containsKey(urlKey)) {
+            return availableUrls.get(urlKey);
+        } else if (!availableUrls.containsKey(DEFAULT_URL_KEY)) {
             throw new IllegalArgumentException("Url with specified key is not defined.");
         }
-        return avaliableUrls.get(DEFAULT_URL_KEY);
+        return availableUrls.get(DEFAULT_URL_KEY);
     }
 
     private static String getPageUrlByKey(String urlKey) {
@@ -72,7 +72,6 @@ public class UrlUtil {
                 return baseUrl + processSuffix(avaliableUrls, urlConfigTag[0]);
             }
         }
-
         return baseUrl + processSuffix(avaliableUrls, DEFAULT_URL_KEY);
     }
 }
