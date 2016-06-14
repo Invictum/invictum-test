@@ -1,9 +1,10 @@
 package com.github.invictum.utils.rest;
 
-import com.github.invictum.Log;
 import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -15,6 +16,7 @@ public class ProfileManager {
 
     /** Rest profiles root starting from resources */
     private final static String PROFILES_ROOT = PropertiesUtil.getProperty(EnhancedSystemProperty.ProfilesDirectory);
+    private final static Logger LOG = LoggerFactory.getLogger(ProfileManager.class);
 
     public static RestProfile getProfile(String profileName) {
         RestProfile profile = null;
@@ -23,7 +25,7 @@ public class ProfileManager {
             Yaml yaml = new Yaml(new Constructor(RestProfile.class));
             profile = (RestProfile) yaml.load(new FileInputStream(profileFile));
         } catch (FileNotFoundException e) {
-            Log.error("Failed to load '{}' profile", profileName);
+            LOG.error("Failed to load '{}' profile", profileName);
         }
         return profile;
     }

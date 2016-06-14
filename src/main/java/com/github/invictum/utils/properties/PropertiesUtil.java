@@ -6,11 +6,13 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
-import com.github.invictum.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PropertiesUtil {
 
     private static CompositeConfiguration config = new CompositeConfiguration();
+    private final static Logger LOG = LoggerFactory.getLogger(PropertiesUtil.class);
 
     static {
         String fileName = SerenitySystemProperties.getProperties()
@@ -27,8 +29,9 @@ public class PropertiesUtil {
         PropertiesConfiguration properties = new PropertiesConfiguration();
         try {
             properties.load(propertyFileName);
+            LOG.debug("Loaded {} properties from {}", properties.getKeys(), propertyFileName);
         } catch (ConfigurationException e) {
-            Log.error("Failed to load property file.");
+            LOG.error("Failed to load property file.");
         }
         return properties;
     }

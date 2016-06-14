@@ -1,15 +1,17 @@
 package com.github.invictum.utils.url;
 
-import com.github.invictum.Log;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import net.serenitybdd.core.pages.PageUrls;
 import net.thucydides.core.webdriver.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public class EnhancedPageUrls extends PageUrls {
 
+    private final static Logger LOG = LoggerFactory.getLogger(EnhancedPageUrls.class);
     private Map<String, String> availableUrls;
     private String pageName;
 
@@ -35,7 +37,7 @@ public class EnhancedPageUrls extends PageUrls {
     @Override
     public String getStartingUrl() {
         String fullPageUrl = UrlUtil.buildPageUrl(getSystemBaseUrl(), availableUrls);
-        Log.info("Using {} url for {} page", fullPageUrl, pageName);
+        LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
 
@@ -43,7 +45,7 @@ public class EnhancedPageUrls extends PageUrls {
     public String getStartingUrl(String... parameterValues) {
         String fullPageUrl = UrlUtil.buildPageUrl(getSystemBaseUrl(), availableUrls);
         fullPageUrl = urlWithParametersSubstituted(fullPageUrl, parameterValues);
-        Log.info("Using {} url for {} page", fullPageUrl, pageName);
+        LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
 
@@ -53,7 +55,7 @@ public class EnhancedPageUrls extends PageUrls {
             throw new IllegalArgumentException(String.format("Url with %s key is not found for %s", name, pageName));
         }
         String namedUrl = availableUrls.get(name);
-        Log.debug("Using {} url for {} key", namedUrl, name);
+        LOG.debug("Using {} url for {} key", namedUrl, name);
         return availableUrls.get(name);
     }
 }

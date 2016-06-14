@@ -1,16 +1,19 @@
 package com.github.invictum.dto;
 
-import com.github.invictum.Log;
 import com.github.invictum.dto.annotation.DtoAttribute;
 import com.github.invictum.dto.annotation.KeyAttribute;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AbstractDto {
+
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractDto.class);
 
     public static final boolean FULL_DTO_VIEW = Boolean
             .valueOf(PropertiesUtil.getProperty(EnhancedSystemProperty.FullDtoView));
@@ -20,7 +23,7 @@ public class AbstractDto {
         try {
             return (String) attribute.get(object);
         } catch (IllegalAccessException e) {
-            Log.error("Failed to get data for {} attribute", attribute);
+            LOG.error("Failed to get data for {} attribute", attribute);
         }
         return null;
     }

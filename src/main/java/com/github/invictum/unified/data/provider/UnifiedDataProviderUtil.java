@@ -1,16 +1,20 @@
 package com.github.invictum.unified.data.provider;
 
-import com.github.invictum.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public class UnifiedDataProviderUtil {
+
+    private final static Logger LOG = LoggerFactory.getLogger(UnifiedDataProviderUtil.class);
+
     public static String getDataByKey(final String key, final UnifiedDataProvider dataProvider) {
         Map<String, String> data = dataProvider.getData();
         if (!data.containsKey(key)) {
             throw new IllegalArgumentException(String.format("Data related to '%s' key is not found.", key));
         }
-        Log.debug("Used \"{}\" data for \"{}\" key", data.get(key), key);
+        LOG.debug("Used \"{}\" data for \"{}\" key", data.get(key), key);
         return data.get(key);
     }
 
@@ -19,7 +23,7 @@ public class UnifiedDataProviderUtil {
         if (!locators.containsKey(key)) {
             throw new IllegalArgumentException(String.format("Locator for '%s' key is not found.", key));
         }
-        Log.debug("Used \"{}\" locator for \"{}\" key", locators.get(key), key);
+        LOG.debug("Used \"{}\" locator for \"{}\" key", locators.get(key), key);
         return locators.get(key);
     }
 }

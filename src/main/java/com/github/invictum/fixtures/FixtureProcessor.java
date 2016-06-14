@@ -1,10 +1,11 @@
 package com.github.invictum.fixtures;
 
-import com.github.invictum.Log;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class FixtureProcessor {
 
     public static final String FIXTURES_PACKAGE = PropertiesUtil
             .getProperty(EnhancedSystemProperty.FixturesPackageName);
+    private final static Logger LOG = LoggerFactory.getLogger(FixtureProcessor.class);
 
     private static Set<Class<? extends AbstractFixture>> availableFixtureClasses = new HashSet<>();
     private static ThreadLocal<Queue<Fixture>> registeredFixtures = new ThreadLocal<Queue<Fixture>>() {
@@ -24,7 +26,7 @@ public class FixtureProcessor {
     static {
         Reflections reflections = new Reflections(ClasspathHelper.forPackage(FIXTURES_PACKAGE));
         availableFixtureClasses = reflections.getSubTypesOf(AbstractFixture.class);
-        Log.debug("Found {} available fixtures", availableFixtureClasses.size());
+        LOG.debug("Found {} available fixtures", availableFixtureClasses.size());
     }
 
     public static void apply(Map<String, String> annotations) {
@@ -34,11 +36,11 @@ public class FixtureProcessor {
                     try {
                         Fixture fixture = fixtureClass.newInstance();
                         fixture.setParams(prepareParams(annotation.getValue()));
-                        Log.info("Applying {} fixture", fixture);
+                        LOG.info("Applying {} fixture", fixture);
                         fixture.prepareCondition();
                         registeredFixtures.get().add(fixture);
                     } catch (ReflectiveOperationException e) {
-                        Log.error("Failed to apply {} fixture", fixtureClass);
+                        LOG.error("Failed to apply {} fixture", fixtureClass);
                     }
                 }
             }
@@ -48,7 +50,7 @@ public class FixtureProcessor {
     public static void rollback() {
         while (registeredFixtures.get().size() > 0) {
             Fixture fixture = registeredFixtures.get().poll();
-            Log.info("Rollback for {} fixture", fixture);
+            LOG.info("Rollback for {} fixture", fixture);
             fixture.rollbackCondition();
         }
     }

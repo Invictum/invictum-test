@@ -1,13 +1,14 @@
 package com.github.invictum.panels;
 
+import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
+import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.apache.commons.lang3.StringUtils;
-import com.github.invictum.Log;
-import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.utils.properties.PropertiesUtil;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class PanelFactory {
 
     public static final String SUFFIX = "Panel";
     public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.PanelsPackageName);
+    private final static Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
 
     private PanelFactory() {
         // disable constructor.
@@ -34,9 +36,9 @@ public class PanelFactory {
         T panelInstance;
         try {
             panelInstance = panelClass.newInstance();
-            Log.debug("New {} is initialized", panelInstance);
+            LOG.debug("New {} is initialized", panelInstance);
         } catch (ReflectiveOperationException e) {
-            Log.error("Failed to init panel - {}", e.getCause());
+            LOG.error("Failed to init panel - {}", e.getCause());
             throw new IllegalStateException(String.format("Failed to init %s", panelClass));
         }
         return panelInstance;

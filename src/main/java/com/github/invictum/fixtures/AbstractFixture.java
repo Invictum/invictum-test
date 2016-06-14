@@ -1,12 +1,14 @@
 package com.github.invictum.fixtures;
 
-import com.github.invictum.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractFixture implements Fixture {
 
+    private final static Logger LOG = LoggerFactory.getLogger(AbstractFixture.class);
     private List<String> params = null;
 
     @Override
@@ -16,7 +18,7 @@ public abstract class AbstractFixture implements Fixture {
 
     @Override
     public void rollbackCondition() {
-        Log.debug("Default rollback for {} fixture", this);
+        LOG.debug("Default rollback for {} fixture", this);
     }
 
     @Override

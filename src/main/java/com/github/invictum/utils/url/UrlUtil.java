@@ -1,8 +1,9 @@
 package com.github.invictum.utils.url;
 
-import com.github.invictum.Log;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.Serenity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +15,7 @@ public class UrlUtil {
     public static final String DEFAULT_URL_KEY = "default";
     public static final String DELIMER = ":";
     public static final String URL_PROPERTY_BASE = "webdriver.base.url";
+    private final static Logger LOG = LoggerFactory.getLogger(UrlUtil.class);
 
     public static String replaceHost(final String starting, final String base) {
         String result = null;
@@ -25,8 +27,8 @@ public class UrlUtil {
             String baseHostComponent = hostComponentFrom(baseUrl.getProtocol(), baseUrl.getHost(), baseUrl.getPort());
             result = starting.replaceFirst(startingHostComponent, baseHostComponent);
         } catch (MalformedURLException e) {
-            Log.error("Failed to analyse default page URL: Starting URL: {}, Base URL: {}", starting, base);
-            Log.error("URL analysis failed with exception:", e);
+            LOG.error("Failed to analyse default page URL: Starting URL: {}, Base URL: {}", starting, base);
+            LOG.error("URL analysis failed with exception:", e);
         }
         return result;
     }
