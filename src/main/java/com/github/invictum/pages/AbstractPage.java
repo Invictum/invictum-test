@@ -19,10 +19,12 @@ import java.util.List;
 public class AbstractPage extends PageObject {
 
     private UnifiedDataProvider dataProvider;
+    private EnhancedPageUrls pageUrls;
 
     public AbstractPage() {
         super();
-        setPageUrls(new EnhancedPageUrls(this));
+        pageUrls = new EnhancedPageUrls(this);
+        setPageUrls(pageUrls);
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
     }
 
@@ -76,5 +78,15 @@ public class AbstractPage extends PageObject {
 
     public boolean isVisible(WebElementFacade element, String locatorKey) {
         return getTrick(Visibility.class).isElementVisible(locator(locatorKey), element);
+    }
+
+    public void openCustom(String url) {
+        pageUrls.overrideUrlOnce(url);
+        super.openUnchecked();
+    }
+
+    public void openCustom(String url, String... params) {
+        pageUrls.overrideUrlOnce(url);
+        super.openUnchecked(params);
     }
 }

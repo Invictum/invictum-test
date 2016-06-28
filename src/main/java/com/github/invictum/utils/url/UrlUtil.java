@@ -76,4 +76,8 @@ public class UrlUtil {
         }
         return baseUrl + processSuffix(avaliableUrls, DEFAULT_URL_KEY);
     }
+
+    public static String buildPageUrlUnsafe(final String key, final Map<String, String> availableUrls) {
+        return getPageUrlByKey(key) + processSuffix(availableUrls, DEFAULT_URL_KEY);
+    }
 }
