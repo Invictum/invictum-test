@@ -14,10 +14,12 @@ public class EnhancedPageUrls extends PageUrls {
     private final static Logger LOG = LoggerFactory.getLogger(EnhancedPageUrls.class);
     private Map<String, String> availableUrls;
     private String pageName;
-    private String overridenUrlKey;
+    private String oneTimeUrlKey;
 
     public EnhancedPageUrls(AbstractPage page, Configuration configuration) {
         super(page, configuration);
+        availableUrls = UnifiedDataProviderFactory.getInstance(page).getUrls();
+        pageName = page.getClass().getSimpleName();
     }
 
     public EnhancedPageUrls(AbstractPage pageObject) {
@@ -35,27 +37,26 @@ public class EnhancedPageUrls extends PageUrls {
         return url;
     }
 
+    private String getPageFullPageUrl() {
+        if (oneTimeUrlKey != null) {
+            String key = oneTimeUrlKey;
+            oneTimeUrlKey = null;
+            return UrlUtil.buildPageUrlUnsafe(key, availableUrls);
+        } else {
+            return UrlUtil.buildPageUrl(getSystemBaseUrl(), availableUrls);
+        }
+    }
+
     @Override
     public String getStartingUrl() {
-        if (overridenUrlKey != null) {
-            String key = overridenUrlKey;
-            overridenUrlKey = null;
-            return UrlUtil.buildPageUrlUnsafe(key, availableUrls);
-        }
-        String fullPageUrl = UrlUtil.buildPageUrl(getSystemBaseUrl(), availableUrls);
+        String fullPageUrl = getPageFullPageUrl();
         LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
 
     @Override
     public String getStartingUrl(String... parameterValues) {
-        if (overridenUrlKey != null) {
-            String key = overridenUrlKey;
-            overridenUrlKey = null;
-            return UrlUtil.buildPageUrlUnsafe(key, availableUrls);
-        }
-        String fullPageUrl = UrlUtil.buildPageUrl(getSystemBaseUrl(), availableUrls);
-        fullPageUrl = urlWithParametersSubstituted(fullPageUrl, parameterValues);
+        String fullPageUrl = urlWithParametersSubstituted(getPageFullPageUrl(), parameterValues);
         LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
@@ -71,6 +72,6 @@ public class EnhancedPageUrls extends PageUrls {
     }
 
     public void overrideUrlOnce(String urlKey) {
-        overridenUrlKey = urlKey;
+        oneTimeUrlKey = urlKey;
     }
 }
