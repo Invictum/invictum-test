@@ -15,7 +15,7 @@ public class ResourceProvider {
     @SuppressWarnings("all")
     private static File getRoot(String rootPath) {
         try {
-            return new File(Thread.currentThread().getContextClassLoader().getResource(rootPath).getFile());
+            return new File(ResourceProvider.class.getClassLoader().getResource(rootPath).getFile());
         } catch (RuntimeException e) {
             throw new IllegalStateException(String.format("Failed to detect root at %s", rootPath));
         }
