@@ -66,8 +66,8 @@ public class AbstractDto {
         if (obj.getClass() != this.getClass()) {
             return false;
         }
-        List<Attribute> expected = getData(this, false);
-        List<Attribute> actual = getData(obj, false);
+        List<Attribute> expected = getData(obj, false);
+        List<Attribute> actual = getData(this, false);
         return actual.containsAll(expected);
     }
 

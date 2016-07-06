@@ -54,7 +54,7 @@ public class DtoTest {
         expected.setValue("value");
         sut.setName("name");
         sut.setValue("value");
-        assertThat("Objects aren't equal.", expected, equalTo(sut));
+        assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DtoTest {
         expected.setValue("value");
         sut.setName("name1");
         sut.setValue("value1");
-        assertThat("Objects are equal.", expected, not(equalTo(sut)));
+        assertThat("Objects are equal.", sut, not(equalTo(expected)));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class DtoTest {
         expected.setName("name");
         sut.setName("name");
         sut.setValue("value");
-        assertThat("Objects aren't equal.", expected, equalTo(sut));
+        assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class DtoTest {
         expected.setName("name");
         expected.setName("value");
         sut.setValue("value");
-        assertThat("Objects aren't equal.", expected, not(equalTo(sut)));
+        assertThat("Objects aren't equal.", sut, not(equalTo(expected)));
     }
 
     @Test
