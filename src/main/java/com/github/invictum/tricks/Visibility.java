@@ -1,27 +1,28 @@
 package com.github.invictum.tricks;
 
-import net.serenitybdd.core.pages.WebElementFacade;
 import com.github.invictum.tricks.core.AbstractTrick;
+import net.serenitybdd.core.pages.WebElementFacade;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Allows to determinate Web Element visibility gracefully.
+ */
 public class Visibility extends AbstractTrick {
 
     private boolean checkElementsVisibility(List<WebElementFacade> elements) {
-        boolean result = false;
         for (WebElementFacade element : elements) {
             if (element.isVisible()) {
-                result = true;
-                break;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
-    public boolean isElementVisible(String xpath, WebElementFacade element) {
+    public boolean isElementVisible(String xpath, WebElementFacade element, int timeout) {
         boolean isVisible;
-        context().setImplicitTimeout(500, TimeUnit.MILLISECONDS);
+        context().setImplicitTimeout(timeout, TimeUnit.MILLISECONDS);
         if (element == null) {
             isVisible = checkElementsVisibility(context().findAll(xpath));
         } else {
@@ -29,5 +30,13 @@ public class Visibility extends AbstractTrick {
         }
         context().resetImplicitTimeout();
         return isVisible;
+    }
+
+    public boolean isElementVisible(String xpath, WebElementFacade element) {
+        return isElementVisible(xpath, element, 500);
+    }
+
+    public boolean isElementVisible(String xpath) {
+        return isElementVisible(xpath, null);
     }
 }
