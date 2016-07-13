@@ -2,7 +2,6 @@ package com.github.invictum.pages;
 
 import com.github.invictum.panels.AbstractPanel;
 import com.github.invictum.panels.PanelFactory;
-import com.github.invictum.tricks.Visibility;
 import com.github.invictum.tricks.Wait;
 import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.tricks.core.TrickFactory;
@@ -70,14 +69,6 @@ public class AbstractPage extends PageObject {
     public AbstractPage smartWait() {
         getTrick(Wait.class).waitForJquery(this);
         return this;
-    }
-
-    public boolean isVisible(String locatorKey) {
-        return getTrick(Visibility.class).isElementVisible(locator(locatorKey), null);
-    }
-
-    public boolean isVisible(WebElementFacade element, String locatorKey) {
-        return getTrick(Visibility.class).isElementVisible(locator(locatorKey), element);
     }
 
     public void openCustom(String url) {
