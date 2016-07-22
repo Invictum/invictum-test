@@ -122,7 +122,7 @@ public class AbstractPage extends PageObject {
     }
 
     /**
-     * Method with changed level protected -> public
+     * Method with changed level from protected to public
      *
      * @param timeInMilliseconds Long
      */
