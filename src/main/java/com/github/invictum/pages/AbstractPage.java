@@ -55,8 +55,8 @@ public class AbstractPage extends PageObject {
     /**
      * Returns panel initialized with caller page.
      *
-     * @param panelClass
-     * @param <T>
+     * @param panelClass T
+     * @param <T> AbstractPanel
      * @return T
      */
     public <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
@@ -66,8 +66,8 @@ public class AbstractPage extends PageObject {
     /**
      * Returns Trick with initialized context.
      *
-     * @param trickClass
-     * @param <T>
+     * @param trickClass T
+     * @param <T> AbstractTrick
      * @return T
      */
     public <T extends AbstractTrick> T getTrick(Class<T> trickClass) {
@@ -77,7 +77,7 @@ public class AbstractPage extends PageObject {
     /**
      * Returns textual representation of locator related to current page.
      *
-     * @param locatorKey
+     * @param locatorKey String
      * @return String
      */
     protected String locator(final String locatorKey) {
@@ -87,7 +87,7 @@ public class AbstractPage extends PageObject {
     /**
      * Returns textual data related to current page.
      *
-     * @param dataKey
+     * @param dataKey String
      * @return String
      */
     protected String data(final String dataKey) {
@@ -97,7 +97,7 @@ public class AbstractPage extends PageObject {
     /**
      * Initializes WebElement by it locator key in context of current page.
      *
-     * @param locatorKey
+     * @param locatorKey String
      * @return WebElementFacade
      */
     public WebElementFacade locate(final String locatorKey) {
@@ -108,8 +108,8 @@ public class AbstractPage extends PageObject {
     /**
      * Initializes WebElements by its locator keys in context of current page.
      *
-     * @param locatorKey
-     * @return List<WebElementFacade>
+     * @param locatorKey String
+     * @return List WebElementFacade
      */
     public List<WebElementFacade> locateAll(final String locatorKey) {
         String locator = locator(locatorKey);
@@ -124,7 +124,7 @@ public class AbstractPage extends PageObject {
     /**
      * Method with changed level protected -> public
      *
-     * @param timeInMilliseconds
+     * @param timeInMilliseconds Long
      */
     public void waitABit(long timeInMilliseconds) {
         super.waitABit(timeInMilliseconds);
@@ -140,7 +140,7 @@ public class AbstractPage extends PageObject {
     /**
      * Opens current page at custom url.
      *
-     * @param url
+     * @param url String
      */
     public void openCustom(String url) {
         pageUrls.overrideUrlOnce(url);
@@ -150,8 +150,8 @@ public class AbstractPage extends PageObject {
     /**
      * Opens page at custom url with parameters.
      *
-     * @param url
-     * @param params
+     * @param url String
+     * @param params String[]
      */
     public void openCustom(String url, String... params) {
         pageUrls.overrideUrlOnce(url);
