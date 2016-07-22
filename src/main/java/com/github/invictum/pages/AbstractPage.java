@@ -9,9 +9,11 @@ import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderUtil;
 import com.github.invictum.utils.url.EnhancedPageUrls;
+import net.serenitybdd.core.annotations.findby.By;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.WhenPageOpens;
 import net.thucydides.core.pages.PageObject;
+import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 
@@ -22,9 +24,27 @@ public class AbstractPage extends PageObject {
 
     public AbstractPage() {
         super();
+        initPage();
+    }
+
+    public AbstractPage(WebDriver driver) {
+        super(driver);
+        initPage();
+    }
+
+    public AbstractPage(WebDriver driver, int ajaxTimeout) {
+        super(driver, ajaxTimeout);
+        initPage();
+    }
+
+    private void initPage() {
         pageUrls = new EnhancedPageUrls(this);
         setPageUrls(pageUrls);
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
+    }
+
+    private boolean isXpath(String locator) {
+        return locator.matches("//.+$");
     }
 
     @Override
@@ -32,28 +52,68 @@ public class AbstractPage extends PageObject {
         return getClass().getSimpleName();
     }
 
+    /**
+     * Returns panel initialized with caller page.
+     *
+     * @param panelClass
+     * @param <T>
+     * @return T
+     */
     public <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
         return PanelFactory.get(panelClass, this);
     }
 
+    /**
+     * Returns Trick with initialized context.
+     *
+     * @param trickClass
+     * @param <T>
+     * @return T
+     */
     public <T extends AbstractTrick> T getTrick(Class<T> trickClass) {
         return TrickFactory.getTrick(trickClass, this);
     }
 
+    /**
+     * Returns textual representation of locator related to current page.
+     *
+     * @param locatorKey
+     * @return String
+     */
     protected String locator(final String locatorKey) {
-        return "." + UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+        return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
     }
 
+    /**
+     * Returns textual data related to current page.
+     *
+     * @param dataKey
+     * @return String
+     */
     protected String data(final String dataKey) {
         return UnifiedDataProviderUtil.getDataByKey(dataKey, dataProvider);
     }
 
+    /**
+     * Initializes WebElement by it locator key in context of current page.
+     *
+     * @param locatorKey
+     * @return WebElementFacade
+     */
     public WebElementFacade locate(final String locatorKey) {
-        return findBy(locator(locatorKey));
+        String locator = locator(locatorKey);
+        return isXpath(locator) ? find(By.xpath(locator)) : find(By.cssSelector(locator));
     }
 
+    /**
+     * Initializes WebElements by its locator keys in context of current page.
+     *
+     * @param locatorKey
+     * @return List<WebElementFacade>
+     */
     public List<WebElementFacade> locateAll(final String locatorKey) {
-        return findAll(locator(locatorKey));
+        String locator = locator(locatorKey);
+        return isXpath(locator) ? findAll(By.xpath(locator)) : findAll(By.cssSelector(locator));
     }
 
     @Override
@@ -61,21 +121,38 @@ public class AbstractPage extends PageObject {
         return startingUrl;
     }
 
+    /**
+     * Method with changed level protected -> public
+     *
+     * @param timeInMilliseconds
+     */
     public void waitABit(long timeInMilliseconds) {
         super.waitABit(timeInMilliseconds);
     }
 
+    @Deprecated
     @WhenPageOpens
     public AbstractPage smartWait() {
         getTrick(Wait.class).waitForJquery(this);
         return this;
     }
 
+    /**
+     * Opens current page at custom url.
+     *
+     * @param url
+     */
     public void openCustom(String url) {
         pageUrls.overrideUrlOnce(url);
         super.openUnchecked();
     }
 
+    /**
+     * Opens page at custom url with parameters.
+     *
+     * @param url
+     * @param params
+     */
     public void openCustom(String url, String... params) {
         pageUrls.overrideUrlOnce(url);
         super.openUnchecked(params);

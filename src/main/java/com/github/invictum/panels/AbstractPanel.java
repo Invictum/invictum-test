@@ -1,5 +1,9 @@
 package com.github.invictum.panels;
 
+import com.github.invictum.pages.AbstractPage;
+import com.github.invictum.tricks.Visibility;
+import com.github.invictum.tricks.Wait;
+import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderUtil;
@@ -7,11 +11,6 @@ import net.serenitybdd.core.SerenitySystemProperties;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.serenitybdd.core.pages.WebElementFacadeImpl;
 import net.thucydides.core.ThucydidesSystemProperty;
-import net.thucydides.core.webdriver.ThucydidesWebDriverSupport;
-import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.tricks.Visibility;
-import com.github.invictum.tricks.Wait;
-import com.github.invictum.tricks.core.AbstractTrick;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -30,9 +29,6 @@ public class AbstractPanel {
 
     public AbstractPanel() {
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
-        final WebDriver driver = ThucydidesWebDriverSupport.getDriver();
-        panel = WebElementFacadeImpl
-                .wrapWebElement(driver, driver.findElement(By.xpath(dataProvider.getBase())), timeout);
     }
 
     @Override
@@ -42,19 +38,38 @@ public class AbstractPanel {
 
     public void initWith(final AbstractPage parentPage) {
         this.parentPage = parentPage;
-        smartWait();
+        getTrick(Wait.class).waitForJquery(this);
+        if (isXpath(dataProvider.getBase())) {
+            panel = WebElementFacadeImpl
+                    .wrapWebElement(getDriver(), this.parentPage.find(By.xpath(dataProvider.getBase())), timeout);
+        } else {
+            panel = WebElementFacadeImpl
+                    .wrapWebElement(getDriver(), this.parentPage.find(By.cssSelector(dataProvider.getBase())), timeout);
+        }
     }
 
     protected <T extends AbstractTrick> T getTrick(Class<T> trickClass) {
         return parentPage.getTrick(trickClass);
     }
 
+    private boolean isXpath(String locator) {
+        return locator.matches("^//.+$");
+    }
+
     public WebElementFacade findBy(final String elementLocator) {
         return panel.findBy(elementLocator);
     }
 
+    public WebElementFacade findBy(By by) {
+        return panel.find(by);
+    }
+
     public List<WebElementFacade> findAll(final String elementLocator) {
         return panel.thenFindAll(elementLocator);
+    }
+
+    public List<WebElementFacade> findAll(By by) {
+        return panel.thenFindAll(by);
     }
 
     public WebDriver getDriver() {
@@ -70,9 +85,10 @@ public class AbstractPanel {
     }
 
     protected String locator(final String locatorKey) {
-        return locator(locatorKey, false);
+        return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
     }
 
+    @Deprecated
     private String locator(final String locatorKey, final boolean stripLocator) {
         String base = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
         if (!stripLocator) {
@@ -82,11 +98,19 @@ public class AbstractPanel {
     }
 
     public WebElementFacade locate(final String locatorKey) {
-        return findBy(locator(locatorKey));
+        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+        if (isXpath(locator)) {
+            return findBy(By.xpath(PANEL_LOCATOR_PREFIX + locator));
+        }
+        return findBy(By.cssSelector(locator));
     }
 
     public List<WebElementFacade> locateAll(final String locatorKey) {
-        return findAll(locator(locatorKey));
+        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+        if (isXpath(locator)) {
+            return findAll(By.xpath(PANEL_LOCATOR_PREFIX + locator));
+        }
+        return findAll(By.cssSelector(locator));
     }
 
     protected String data(final String dataKey) {
@@ -97,6 +121,7 @@ public class AbstractPanel {
         parentPage.waitABit(milliseconds);
     }
 
+    @Deprecated
     protected void smartWait() {
         getTrick(Wait.class).waitForJquery(this);
     }
@@ -105,11 +130,13 @@ public class AbstractPanel {
         return parentPage.withAction();
     }
 
+    @Deprecated
     public boolean isVisible(String locatorKey) {
         String fullLocator = dataProvider.getBase() + locator(locatorKey, true);
         return getTrick(Visibility.class).isElementVisible(fullLocator, panel);
     }
 
+    @Deprecated
     public boolean isVisible(WebElementFacade element, String locatorKey) {
         String fullLocator = dataProvider.getBase() + locator(locatorKey, true);
         return getTrick(Visibility.class).isElementVisible(fullLocator, element);
