@@ -53,7 +53,7 @@ public class AbstractPanel {
     }
 
     private boolean isXpath(String locator) {
-        return locator.matches("^//.+$");
+        return parentPage.isXpath(locator);
     }
 
     public WebElementFacade findBy(final String elementLocator) {

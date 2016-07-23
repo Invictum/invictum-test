@@ -43,7 +43,7 @@ public class AbstractPage extends PageObject {
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
     }
 
-    private boolean isXpath(String locator) {
+    public boolean isXpath(String locator) {
         return locator.matches("//.+$");
     }
 
@@ -56,7 +56,7 @@ public class AbstractPage extends PageObject {
      * Returns panel initialized with caller page.
      *
      * @param panelClass T
-     * @param <T> AbstractPanel
+     * @param <T>        AbstractPanel
      * @return T
      */
     public <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
@@ -67,7 +67,7 @@ public class AbstractPage extends PageObject {
      * Returns Trick with initialized context.
      *
      * @param trickClass T
-     * @param <T> AbstractTrick
+     * @param <T>        AbstractTrick
      * @return T
      */
     public <T extends AbstractTrick> T getTrick(Class<T> trickClass) {
@@ -150,7 +150,7 @@ public class AbstractPage extends PageObject {
     /**
      * Opens page at custom url with parameters.
      *
-     * @param url String
+     * @param url    String
      * @param params String[]
      */
     public void openCustom(String url, String... params) {
