@@ -44,7 +44,7 @@ public class AbstractPage extends PageObject {
     }
 
     public boolean isXpath(String locator) {
-        return locator.matches("//.+$");
+        return locator.matches("^(//|html/).+$");
     }
 
     @Override

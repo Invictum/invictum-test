@@ -85,7 +85,8 @@ public class AbstractPanel {
     }
 
     protected String locator(final String locatorKey) {
-        return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+        return isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
     }
 
     @Deprecated
