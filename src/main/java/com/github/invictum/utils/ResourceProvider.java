@@ -24,7 +24,7 @@ public class ResourceProvider {
     public static File getFile(final String root, final String fileName) {
         File rootDirectory = getRoot(root);
         Collection<File> fileList = FileUtils
-                .listFiles(rootDirectory, FileFilterUtils.suffixFileFilter(fileName), FileFilterUtils.trueFileFilter());
+                .listFiles(rootDirectory, FileFilterUtils.nameFileFilter(fileName), FileFilterUtils.trueFileFilter());
         if (fileList.size() == 1) {
             return fileList.iterator().next();
         } else {

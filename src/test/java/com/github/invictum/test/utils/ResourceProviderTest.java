@@ -23,6 +23,14 @@ public class ResourceProviderTest {
     public void getFileTest() throws IOException {
         File expected = folder.newFile("file");
         File actual = ResourceProvider.getFile("", "file");
+        assertThat("Newest selected file is wrong.", actual, equalTo(expected));
+    }
+
+    @Test
+    public void getFileSuffixTest() throws IOException {
+        folder.newFile("oneFile");
+        File expected = folder.newFile("File");
+        File actual = ResourceProvider.getFile("", "File");
         assertThat("Newest file selected wrong.", actual, equalTo(expected));
     }
 
@@ -32,7 +40,7 @@ public class ResourceProviderTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void fileDuplicateTest() throws IOException {
+    public void fileNonExistSuffixTest() throws IOException {
         folder.newFile("firstFile");
         folder.newFile("secondFile");
         ResourceProvider.getFile("", "File");
