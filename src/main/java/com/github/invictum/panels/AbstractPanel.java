@@ -38,7 +38,6 @@ public class AbstractPanel {
 
     public void initWith(final AbstractPage parentPage) {
         this.parentPage = parentPage;
-        getTrick(Wait.class).waitForJquery(this);
         if (isXpath(dataProvider.getBase())) {
             panel = WebElementFacadeImpl
                     .wrapWebElement(getDriver(), this.parentPage.find(By.xpath(dataProvider.getBase())), timeout);

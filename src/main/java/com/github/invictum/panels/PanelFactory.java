@@ -1,6 +1,8 @@
 package com.github.invictum.panels;
 
 import com.github.invictum.pages.AbstractPage;
+import com.github.invictum.panels.strategy.NoWaitStrategy;
+import com.github.invictum.panels.strategy.PanelInitStrategy;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -16,19 +18,40 @@ public class PanelFactory {
 
     public static final String SUFFIX = "Panel";
     public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.PanelsPackageName);
-    private final static Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
+    public static final Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
+
+    private static PanelInitStrategy strategy = new NoWaitStrategy();
 
     private PanelFactory() {
         // disable constructor.
     }
 
+    /**
+     * Set panel init wait strategy.
+     *
+     * @param strategyToSet
+     */
+    public static void setPanelInitWaitStrategy(PanelInitStrategy strategyToSet) {
+        strategy = strategyToSet;
+        LOG.info("Set {} strategy", strategyToSet);
+    }
+
+    /**
+     * Method returns initialized panel by its class.
+     *
+     * @param panelClass
+     * @param parentPage
+     * @param <T>
+     * @return Panel
+     */
     public static <T extends AbstractPanel> T get(final Class<T> panelClass, final AbstractPage parentPage) {
         T panelInstance = getPanel(panelClass);
+        strategy.apply(parentPage);
         panelInstance.initWith(parentPage);
         return panelInstance;
     }
 
-    public static <T extends AbstractPanel> T get(final Class<T> panelClass) {
+    private static <T extends AbstractPanel> T get(final Class<T> panelClass) {
         return getPanel(panelClass);
     }
 
@@ -44,6 +67,12 @@ public class PanelFactory {
         return panelInstance;
     }
 
+    /**
+     * Returns panel representation as WebElementFacade.
+     *
+     * @param panelName
+     * @return WebElementFacade
+     */
     public static WebElementFacade getAsWebElement(String panelName) {
         String fullPanelName = String.format("%s%s", panelName, SUFFIX);
         AbstractPanel resultPanel = null;
