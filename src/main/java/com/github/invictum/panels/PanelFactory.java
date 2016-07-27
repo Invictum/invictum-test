@@ -12,6 +12,7 @@ import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 public class PanelFactory {
@@ -48,7 +49,22 @@ public class PanelFactory {
         T panelInstance = getPanel(panelClass);
         strategy.apply(parentPage);
         panelInstance.initWith(parentPage);
+        invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
+    }
+
+    private static void invokeWhenInitializedMethods(AbstractPanel panel) {
+        for (Method method : panel.getClass().getMethods()) {
+            if (method.isAnnotationPresent(WhenPanelInitializes.class)) {
+                try {
+                    method.setAccessible(true);
+                    method.invoke(panel);
+                } catch (ReflectiveOperationException e) {
+                    LOG.error("Failed to invoke {} method", method.toString());
+                    LOG.error(e.getMessage());
+                }
+            }
+        }
     }
 
     private static <T extends AbstractPanel> T get(final Class<T> panelClass) {
