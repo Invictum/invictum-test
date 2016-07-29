@@ -4,6 +4,7 @@ import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import net.serenitybdd.core.pages.PageUrls;
 import net.thucydides.core.webdriver.Configuration;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class EnhancedPageUrls extends PageUrls {
         return url;
     }
 
-    private String getPageFullPageUrl() {
+    private String getPageFullUrl() {
         if (oneTimeUrlKey != null) {
             String key = oneTimeUrlKey;
             oneTimeUrlKey = null;
@@ -49,14 +50,14 @@ public class EnhancedPageUrls extends PageUrls {
 
     @Override
     public String getStartingUrl() {
-        String fullPageUrl = getPageFullPageUrl();
+        String fullPageUrl = getPageFullUrl();
         LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
 
     @Override
     public String getStartingUrl(String... parameterValues) {
-        String fullPageUrl = urlWithParametersSubstituted(getPageFullPageUrl(), parameterValues);
+        String fullPageUrl = urlWithParametersSubstituted(getPageFullUrl(), parameterValues);
         LOG.debug("Using {} url for {} page", fullPageUrl, pageName);
         return fullPageUrl;
     }
@@ -73,5 +74,10 @@ public class EnhancedPageUrls extends PageUrls {
 
     public void overrideUrlOnce(String urlKey) {
         oneTimeUrlKey = urlKey;
+    }
+
+    public String getPageUrlPattern() {
+        String pattern = StringUtils.replacePattern(getPageFullUrl(), "\\{\\d+\\}", ".+?");
+        return StringUtils.replacePattern(pattern, "(?<!.\\+\\?)$", ".+?");
     }
 }

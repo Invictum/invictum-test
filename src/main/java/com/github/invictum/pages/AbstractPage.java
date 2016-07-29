@@ -43,6 +43,12 @@ public class AbstractPage extends PageObject {
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
     }
 
+    /**
+     * Method checks locator relation to xpath or css.
+     *
+     * @param locator String
+     * @return boolean result
+     */
     public boolean isXpath(String locator) {
         return locator.matches("^(//|html/).+$");
     }
@@ -61,6 +67,15 @@ public class AbstractPage extends PageObject {
      */
     public <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
         return PanelFactory.get(panelClass, this);
+    }
+
+    /**
+     * Compares current and page pattern URLs.
+     *
+     * @return boolean result
+     */
+    public boolean isPageUrlCompatible() {
+        return getDriver().getCurrentUrl().matches(pageUrls.getPageUrlPattern());
     }
 
     /**
