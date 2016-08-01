@@ -78,6 +78,6 @@ public class EnhancedPageUrls extends PageUrls {
 
     public String getPageUrlPattern() {
         String pattern = StringUtils.replacePattern(getPageFullUrl(), "\\{\\d+\\}", ".+?");
-        return StringUtils.replacePattern(pattern, "(?<!.\\+\\?)$", ".+?");
+        return StringUtils.replacePattern(pattern, "(?<!.\\+\\?)$", "(.+?|)");
     }
 }

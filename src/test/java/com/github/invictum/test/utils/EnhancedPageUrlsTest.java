@@ -37,7 +37,7 @@ public class EnhancedPageUrlsTest {
     public void getPageUrlPatternTest() throws Exception {
         when(UrlUtil.class, "buildPageUrl", anyObject(), anyObject()).thenReturn("http://host/path");
         EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
-        assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host/path.+?"));
+        assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host/path(.+?|)"));
     }
 
     @Test
@@ -49,8 +49,15 @@ public class EnhancedPageUrlsTest {
 
     @Test
     public void getPageUrlPatternWithParamsTest() throws Exception {
-        when(UrlUtil.class, "buildPageUrl", anyObject(), anyObject()).thenReturn("http://host:8080/{1}/path/{2}");
+        when(UrlUtil.class, "buildPageUrl", anyObject(), anyObject()).thenReturn("http://host:8080/{1}/path/");
         EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
-        assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host:8080/.+?/path/.+?"));
+        assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host:8080/.+?/path/(.+?|)"));
+    }
+
+    @Test
+    public void getPageUrlPatternWithParamsNoEndingTest() throws Exception {
+        when(UrlUtil.class, "buildPageUrl", anyObject(), anyObject()).thenReturn("http://host:8080/path-{1}/{2}");
+        EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
+        assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host:8080/path-.+?/.+?"));
     }
 }
