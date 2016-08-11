@@ -79,8 +79,12 @@ public class AbstractPanel {
         return parentPage.getAlert();
     }
 
-    public void evaluateJavascript(final String scriptToExecute) {
-        parentPage.evaluateJavascript(scriptToExecute);
+    public Object evaluateJavascript(final String scriptToExecute) {
+        return parentPage.evaluateJavascript(scriptToExecute);
+    }
+
+    public Object evaluateJavascript(final String scriptToExecute, final Object... params) {
+        return parentPage.evaluateJavascript(scriptToExecute, params);
     }
 
     protected String locator(final String locatorKey) {
