@@ -21,11 +21,11 @@ import java.util.List;
 public class AbstractPanel {
 
     private static final String PANEL_LOCATOR_PREFIX = ".";
-    public static final int timeout = SerenitySystemProperties.getProperties()
+    protected final int timeout = SerenitySystemProperties.getProperties()
             .getIntegerValue(ThucydidesSystemProperty.WEBDRIVER_WAIT_FOR_TIMEOUT, 10000);
     protected WebElementFacade panel;
-    private UnifiedDataProvider dataProvider;
-    private AbstractPage parentPage;
+    protected UnifiedDataProvider dataProvider;
+    protected AbstractPage parentPage;
 
     public AbstractPanel() {
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
@@ -87,12 +87,8 @@ public class AbstractPanel {
         return parentPage.evaluateJavascript(scriptToExecute, params);
     }
 
-    protected String keyToLocator(final String locatorKey){
-        return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
-    }
-
     protected String locator(final String locatorKey) {
-        String locator = keyToLocator(locatorKey);
+        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
         return isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
     }
 
