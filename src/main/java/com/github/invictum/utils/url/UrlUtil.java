@@ -2,6 +2,7 @@ package com.github.invictum.utils.url;
 
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.Serenity;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +51,13 @@ public class UrlUtil {
 
     private static String processSuffix(final Map<String, String> availableUrls, final String urlKey) {
         if (availableUrls.containsKey(urlKey)) {
+            LOG.debug("Found url for {} key, use {} suffix", urlKey, availableUrls.get(urlKey));
             return availableUrls.get(urlKey);
         } else if (!availableUrls.containsKey(DEFAULT_URL_KEY)) {
-            throw new IllegalArgumentException("Url with specified key is not defined.");
+            LOG.debug("Default url key isn't found, use base URL");
+            return StringUtils.EMPTY;
         }
+        LOG.debug("Found default url key, use {} suffix", availableUrls.get(DEFAULT_URL_KEY));
         return availableUrls.get(DEFAULT_URL_KEY);
     }
 
