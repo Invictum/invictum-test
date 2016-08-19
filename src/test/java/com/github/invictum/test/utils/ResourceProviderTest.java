@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(JUnit4.class)
@@ -44,5 +45,16 @@ public class ResourceProviderTest {
         folder.newFile("firstFile");
         folder.newFile("secondFile");
         ResourceProvider.getFile("", "File");
+    }
+
+    @Test
+    public void isPackagePresentTest() {
+        assertThat("Package presence isn't detected.",
+                ResourceProvider.isPackagePresent("com.github.invictum.test.utils"), is(true));
+    }
+
+    @Test
+    public void isPackageNotPresentTest() {
+        assertThat("Package should be absent.", ResourceProvider.isPackagePresent("com.example"), is(false));
     }
 }

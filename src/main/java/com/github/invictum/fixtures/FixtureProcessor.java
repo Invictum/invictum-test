@@ -1,5 +1,6 @@
 package com.github.invictum.fixtures;
 
+import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.reflections.Reflections;
@@ -24,6 +25,9 @@ public class FixtureProcessor {
     };
 
     static {
+        if (!ResourceProvider.isPackagePresent(FIXTURES_PACKAGE)) {
+            LOG.error("Configure fixtures package with '{}' property", EnhancedSystemProperty.FixturesPackageName);
+        }
         Reflections reflections = new Reflections(ClasspathHelper.forPackage(FIXTURES_PACKAGE));
         availableFixtureClasses = reflections.getSubTypesOf(AbstractFixture.class);
         LOG.debug("Found {} available fixtures", availableFixtureClasses.size());

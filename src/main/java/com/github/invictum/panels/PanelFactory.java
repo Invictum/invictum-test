@@ -3,6 +3,7 @@ package com.github.invictum.panels;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.strategy.NoWaitStrategy;
 import com.github.invictum.panels.strategy.PanelInitStrategy;
+import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -25,6 +26,12 @@ public class PanelFactory {
 
     private PanelFactory() {
         // disable constructor.
+    }
+
+    static {
+        if (!ResourceProvider.isPackagePresent(PANELS_PACKAGE)) {
+            LOG.error("Configure panels package with '{}' property", EnhancedSystemProperty.PanelsPackageName);
+        }
     }
 
     /**
@@ -101,7 +108,8 @@ public class PanelFactory {
             }
         }
         if (resultPanel == null) {
-            throw new IllegalStateException(String.format("%s panel is not found", panelName));
+            LOG.error("{} panel is not found. Check class name and location", panelName);
+            throw new IllegalStateException();
         }
         return resultPanel.asWebElement();
     }
