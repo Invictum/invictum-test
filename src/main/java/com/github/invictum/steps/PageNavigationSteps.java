@@ -4,6 +4,8 @@ import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import net.serenitybdd.core.SerenitySystemProperties;
+import net.thucydides.core.ThucydidesSystemProperty;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.pages.Pages;
 import org.apache.commons.lang3.StringUtils;
@@ -18,8 +20,10 @@ import java.util.concurrent.TimeUnit;
 public class PageNavigationSteps extends AbstractSteps {
 
     public static final String PAGES_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.PagesPackageName);
-    public final static String PAGE_SUFFIX = "Page";
+    public static final String PAGE_SUFFIX = "Page";
     public static final Logger LOG = LoggerFactory.getLogger(PageNavigationSteps.class);
+    public static final int TIMEOUT = SerenitySystemProperties.getProperties()
+            .getIntegerValue(ThucydidesSystemProperty.WEBDRIVER_TIMEOUTS_IMPLICITLYWAIT, 30000);
 
     public PageNavigationSteps() {
         super();
@@ -34,7 +38,7 @@ public class PageNavigationSteps extends AbstractSteps {
     @Step
     public void openPage(String pageName) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(30, TimeUnit.SECONDS);
+        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.SECONDS);
         pageToOpen.open();
         pageToOpen.resetImplicitTimeout();
     }
@@ -42,7 +46,7 @@ public class PageNavigationSteps extends AbstractSteps {
     @Step
     public void openPageWithParams(String pageName, String... params) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(30, TimeUnit.SECONDS);
+        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.SECONDS);
         pageToOpen.open(params);
         pageToOpen.resetImplicitTimeout();
     }
