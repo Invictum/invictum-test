@@ -38,7 +38,7 @@ public class PageNavigationSteps extends AbstractSteps {
     @Step
     public void openPage(String pageName) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.SECONDS);
+        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
         pageToOpen.open();
         pageToOpen.resetImplicitTimeout();
     }
@@ -46,7 +46,7 @@ public class PageNavigationSteps extends AbstractSteps {
     @Step
     public void openPageWithParams(String pageName, String... params) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.SECONDS);
+        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
         pageToOpen.open(params);
         pageToOpen.resetImplicitTimeout();
     }
