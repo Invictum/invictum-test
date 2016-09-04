@@ -23,25 +23,27 @@ public class AbstractDto {
         Object value;
         try {
             value = attribute.get(object);
-        } catch (IllegalAccessException var4) {
+        } catch (IllegalAccessException ex) {
             LOG.error("Failed to get data for {} attribute", attribute);
             return null;
         }
 
-        String result = null;
+        if (null == value) {
+            return null;
+        }
         if (value instanceof String) {
-            result = (String) value;
+            return (String) value;
         }
         if (value instanceof Integer) {
-            result = Integer.toString((Integer) value);
+            return Integer.toString((Integer) value);
         }
         if (value instanceof Float) {
-            result = Float.toString((Float) value);
+            return Float.toString((Float) value);
         }
         if (value instanceof Boolean) {
-            result = Boolean.toString((Boolean) value);
+            return Boolean.toString((Boolean) value);
         }
-        return result;
+        return object.toString();
     }
 
     private List<Attribute> getData(Object object, boolean includeNulls) {
