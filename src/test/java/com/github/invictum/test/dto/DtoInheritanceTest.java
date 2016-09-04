@@ -52,7 +52,7 @@ public class DtoInheritanceTest {
         assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
-    @Test(expected=AssertionError.class)
+    @Test(expected = AssertionError.class)
     public void notEqualsInheritedDtoTest() {
         sut.setName("Name");
         sut.setText1("Text");
@@ -68,5 +68,4 @@ public class DtoInheritanceTest {
         sut.setText1("Text2");
         assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(2103926808));
     }
-
 }
