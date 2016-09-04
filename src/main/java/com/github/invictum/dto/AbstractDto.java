@@ -4,6 +4,7 @@ import com.github.invictum.dto.annotation.DtoAttribute;
 import com.github.invictum.dto.annotation.KeyAttribute;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,35 +18,6 @@ public class AbstractDto {
 
     public static final boolean FULL_DTO_VIEW = Boolean
             .valueOf(PropertiesUtil.getProperty(EnhancedSystemProperty.FullDtoView));
-
-    private String extractData(Object object, Field attribute) {
-        attribute.setAccessible(true);
-        try {
-            return (String) attribute.get(object);
-        } catch (IllegalAccessException e) {
-            LOG.error("Failed to get data for {} attribute", attribute);
-        }
-        return null;
-    }
-
-    private List<Attribute> getData(Object object, boolean includeNulls) {
-        List<Attribute> data = new ArrayList<>();
-        for (Field field : object.getClass().getDeclaredFields()) {
-            Attribute attribute = new Attribute();
-            if (field.isAnnotationPresent(DtoAttribute.class)) {
-                attribute.setName(field.getName());
-                attribute.setValue(extractData(object, field));
-                if (attribute.getValue() != null || includeNulls) {
-                    if (field.isAnnotationPresent(KeyAttribute.class)) {
-                        data.add(0, attribute);
-                    } else {
-                        data.add(attribute);
-                    }
-                }
-            }
-        }
-        return data;
-    }
 
     @Override
     public String toString() {
@@ -75,4 +47,41 @@ public class AbstractDto {
     public int hashCode() {
         return getData(this, true).hashCode();
     }
+
+    private String extractData(Object object, Field attribute) {
+        attribute.setAccessible(true);
+        try {
+            return (String) attribute.get(object);
+        } catch (IllegalAccessException e) {
+            LOG.error("Failed to get data for {} attribute", attribute);
+        }
+        return null;
+    }
+
+    private List<Attribute> getData(Object object, boolean includeNulls) {
+        List<Attribute> data = new ArrayList<>();
+        Field[] fields = getFields(object.getClass());
+        for (Field field : fields) {
+            Attribute attribute = new Attribute();
+            if (field.isAnnotationPresent(DtoAttribute.class)) {
+                attribute.setName(field.getName());
+                attribute.setValue(this.extractData(object, field));
+                if (attribute.getValue() != null || includeNulls) {
+                    if (field.isAnnotationPresent(KeyAttribute.class)) {
+                        data.add(0, attribute);
+                    } else {
+                        data.add(attribute);
+                    }
+                }
+            }
+        }
+        return data;
+    }
+
+    private Field[] getFields(Class klass) {
+        Field[] fields = klass.getDeclaredFields();
+        return klass.getSuperclass() == AbstractDto.class ? fields : (Field[]) ArrayUtils
+                .addAll(fields, getFields(klass.getSuperclass()));
+    }
+
 }
