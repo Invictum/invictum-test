@@ -4,6 +4,7 @@ import com.github.invictum.dto.annotation.DtoAttribute;
 import com.github.invictum.dto.annotation.KeyAttribute;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,50 +15,9 @@ import java.util.List;
 public class AbstractDto {
 
     private final static Logger LOG = LoggerFactory.getLogger(AbstractDto.class);
-    private String thisClassName = "AbstractDto";
 
     public static final boolean FULL_DTO_VIEW = Boolean
             .valueOf(PropertiesUtil.getProperty(EnhancedSystemProperty.FullDtoView));
-
-    private String extractData(Object object, Field attribute) {
-        attribute.setAccessible(true);
-        try {
-            return (String) attribute.get(object);
-        } catch (IllegalAccessException e) {
-            LOG.error("Failed to get data for {} attribute", attribute);
-        }
-        return null;
-    }
-
-    private List<Attribute> getData(Object object, boolean includeNulls) {
-        List<Attribute> data = new ArrayList<>();
-        Field[] fields = new Field[0];
-        Class tempClass = object.getClass();
-        String className;
-        do {
-            fields = addToFields(fields, tempClass.getDeclaredFields());
-            tempClass = tempClass.getSuperclass();
-            className = tempClass.getSimpleName();
-        }
-        while (!className.equals(thisClassName));
-
-        for (int var = 0; var < fields.length; ++var) {
-            Field field = fields[var];
-            Attribute attribute = new Attribute();
-            if (field.isAnnotationPresent(DtoAttribute.class)) {
-                attribute.setName(field.getName());
-                attribute.setValue(this.extractData(object, field));
-                if (attribute.getValue() != null || includeNulls) {
-                    if (field.isAnnotationPresent(KeyAttribute.class)) {
-                        data.add(0, attribute);
-                    } else {
-                        data.add(attribute);
-                    }
-                }
-            }
-        }
-        return data;
-    }
 
     @Override
     public String toString() {
@@ -88,19 +48,40 @@ public class AbstractDto {
         return getData(this, true).hashCode();
     }
 
-    private Field[] addToFields(Field[] fields1, Field[] fields2) {
-        Field[] newFields = new Field[fields1.length + fields2.length];
-        Field[] oldFields = fields1;
-        int counter = 0;
-        do {
-            for (int x = 0; x < oldFields.length; x++) {
-                newFields[counter] = oldFields[x];
-                counter++;
-            }
-            oldFields = fields2;
+    private String extractData(Object object, Field attribute) {
+        attribute.setAccessible(true);
+        try {
+            return (String) attribute.get(object);
+        } catch (IllegalAccessException e) {
+            LOG.error("Failed to get data for {} attribute", attribute);
         }
-        while (newFields.length > counter);
-        return newFields;
+        return null;
+    }
+
+    private List<Attribute> getData(Object object, boolean includeNulls) {
+        List<Attribute> data = new ArrayList<>();
+        Field[] fields = getFields(object.getClass());
+        for (Field field : fields) {
+            Attribute attribute = new Attribute();
+            if (field.isAnnotationPresent(DtoAttribute.class)) {
+                attribute.setName(field.getName());
+                attribute.setValue(this.extractData(object, field));
+                if (attribute.getValue() != null || includeNulls) {
+                    if (field.isAnnotationPresent(KeyAttribute.class)) {
+                        data.add(0, attribute);
+                    } else {
+                        data.add(attribute);
+                    }
+                }
+            }
+        }
+        return data;
+    }
+
+    private Field[] getFields(Class klass) {
+        Field[] fields = klass.getDeclaredFields();
+        return klass.getSuperclass() == AbstractDto.class ? fields : (Field[]) ArrayUtils
+                .addAll(fields, getFields(klass.getSuperclass()));
     }
 
 }
