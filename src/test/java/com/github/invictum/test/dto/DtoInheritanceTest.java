@@ -20,31 +20,53 @@ public class DtoInheritanceTest {
 
     @Test
     public void mainDtoTest() {
-        sut.setText1("text1");
-        sut.setText2("text2");
-        String expected = "{text1: text1, text2: text2, intValue: 0}";
+        sut.setText1("Text1");
+        sut.setText2("Text2");
+        String expected = "{text1: Text1, text2: Text2}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void inheritedDtoTest() {
-        sut.setTextValue("text");
-        sut.setBoolValue(true);
-        String expected = "{textValue: text, boolValue: true, intValue: 0}";
+        sut.setName("Name");
+        sut.setValue("Value");
+        String expected = "{name: Name, value: Value}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void bothDtoTest() {
-        sut.setText1("text1");
-        sut.setTextValue("text2");
+        sut.setName("Name");
+        sut.setText1("Text");
+        String expected = "{text1: Text, name: Name}";
+        assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
+    }
+
+    @Test
+    public void equalsInheritedDtoTest() {
+        sut.setName("Name");
+        sut.setText1("Text");
+        ExampleInheritedDTO expected = new ExampleInheritedDTO();
+        expected.setName("Name");
+        expected.setText1("Text");
+        assertThat("Objects aren't equal.", sut, equalTo(expected));
+    }
+
+    @Test(expected=AssertionError.class)
+    public void notEqualsInheritedDtoTest() {
+        sut.setName("Name");
+        sut.setText1("Text");
+        ExampleInheritedDTO expected = new ExampleInheritedDTO();
+        expected.setName("AnotherName");
+        expected.setText1("Text");
+        assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
     public void hashTest() {
-        sut.setTextValue("text1");
-        sut.setText1("text2");
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-617520364));
+        sut.setName("Name");
+        sut.setText1("Text2");
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(2103926808));
     }
 
 }

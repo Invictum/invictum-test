@@ -21,30 +21,12 @@ public class AbstractDto {
 
     private String extractData(Object object, Field attribute) {
         attribute.setAccessible(true);
-
-        Object value;
         try {
-            value = attribute.get(object);
-        } catch (IllegalAccessException var4) {
+            return (String) attribute.get(object);
+        } catch (IllegalAccessException e) {
             LOG.error("Failed to get data for {} attribute", attribute);
-            return null;
         }
-
-        String result = null;
-        if (value instanceof String) {
-            result = (String)value;
-        }
-        if (value instanceof Integer) {
-            result = Integer.toString((Integer)value);
-        }
-        if (value instanceof Float) {
-            result = Float.toString((Float)value);
-        }
-        if (value instanceof Boolean) {
-            result = Boolean.toString((Boolean)value);
-        }
-
-        return result;
+        return null;
     }
 
     private List<Attribute> getData(Object object, boolean includeNulls) {
