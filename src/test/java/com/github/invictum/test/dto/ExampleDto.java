@@ -6,35 +6,35 @@ import com.github.invictum.dto.annotation.DtoAttribute;
 public class ExampleDto extends AbstractDto {
 
     @DtoAttribute
-    private String name;
+    private String textValue;
 
     @DtoAttribute
-    private String value;
+    private Boolean boolValue;
 
     @DtoAttribute
-    private String testValue;
+    private int intValue;
 
-    public String getName() {
-        return name;
+    public String getTextValue() {
+        return textValue;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTextValue(String textValue) {
+        this.textValue = textValue;
     }
 
-    public String getValue() {
-        return value;
+    public Boolean getBoolValue() {
+        return boolValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setBoolValue(Boolean boolValue) {
+        this.boolValue = boolValue;
     }
 
-    public String getTestValue() {
-        return testValue;
+    public int getIntValue() {
+        return intValue;
     }
 
-    public void setTestValue(String testValue) {
-        this.testValue = testValue;
+    public void setIntValue(int intValue) {
+        this.intValue = intValue;
     }
 }

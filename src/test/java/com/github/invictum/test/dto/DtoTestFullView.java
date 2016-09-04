@@ -27,15 +27,16 @@ public class DtoTestFullView {
 
     @Test
     public void toStringTest() {
-        sut.setName("name");
-        sut.setTestValue("1");
-        String expected = "{name: name, value: null, testValue: 1}";
+        sut.setTextValue("name");
+        sut.setBoolValue(true);
+        sut.setIntValue(1);
+        String expected = "{textValue: name, boolValue: true, intValue: 1}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void toStringNullObjectTest() {
-        String expected = "{name: null, value: null, testValue: null}";
+        String expected = "{textValue: null, boolValue: null, intValue: 0}";
         assertThat("Null object converted to string wrong.", sut.toString(), equalTo(expected));
     }
 }
