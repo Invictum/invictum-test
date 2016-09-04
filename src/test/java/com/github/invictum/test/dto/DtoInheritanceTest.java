@@ -20,52 +20,52 @@ public class DtoInheritanceTest {
 
     @Test
     public void mainDtoTest() {
-        sut.setText1("Text1");
-        sut.setText2("Text2");
-        String expected = "{text1: Text1, text2: Text2}";
+        sut.setText1("Text 1");
+        sut.setText2("Text 2");
+        String expected = "{text1: Text 1, text2: Text 2}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void inheritedDtoTest() {
-        sut.setName("Name");
-        sut.setValue("Value");
-        String expected = "{name: Name, value: Value}";
+        sut.setTextValue("Some text");
+        sut.setBoolValue(true);
+        String expected = "{textValue: Some text, boolValue: true}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void bothDtoTest() {
-        sut.setName("Name");
-        sut.setText1("Text");
-        String expected = "{text1: Text, name: Name}";
+        sut.setTextValue("Some text");
+        sut.setText1("Text 1");
+        String expected = "{text1: Text 1, textValue: Some text}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void equalsInheritedDtoTest() {
-        sut.setName("Name");
-        sut.setText1("Text");
+        sut.setTextValue("Some text");
+        sut.setText1("Text 1");
         ExampleInheritedDTO expected = new ExampleInheritedDTO();
-        expected.setName("Name");
-        expected.setText1("Text");
+        expected.setTextValue("Some text");
+        expected.setText1("Text 1");
         assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test(expected = AssertionError.class)
     public void notEqualsInheritedDtoTest() {
-        sut.setName("Name");
-        sut.setText1("Text");
+        sut.setTextValue("Some text");
+        sut.setText1("Text 1");
         ExampleInheritedDTO expected = new ExampleInheritedDTO();
-        expected.setName("AnotherName");
-        expected.setText1("Text");
+        expected.setTextValue("Another Text");
+        expected.setText1("Text 1");
         assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
     public void hashTest() {
-        sut.setName("Name");
-        sut.setText1("Text2");
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(2103926808));
+        sut.setTextValue("Some text");
+        sut.setText1("Text 2");
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-62715168));
     }
 }

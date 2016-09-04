@@ -5,6 +5,7 @@ import com.github.invictum.dto.annotation.KeyAttribute;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class AbstractDto {
 
     @Override
     public String toString() {
-        String stringView = "";
+        String stringView = StringUtils.EMPTY;
         List<Attribute> data = getData(this, FULL_DTO_VIEW);
         if (data.isEmpty()) {
             return "{null}";
@@ -50,11 +51,36 @@ public class AbstractDto {
 
     private String extractData(Object object, Field attribute) {
         attribute.setAccessible(true);
+        Object value;
         try {
-            return (String) attribute.get(object);
-        } catch (IllegalAccessException e) {
+            value = attribute.get(object);
+        } catch (IllegalAccessException ex) {
             LOG.error("Failed to get data for {} attribute", attribute);
+            return null;
         }
+
+        if (null == value) {
+            return null;
+        }
+        if (value instanceof String) {
+            return (String) value;
+        }
+        if (value instanceof Integer) {
+            return Integer.toString((Integer) value);
+        }
+        if (value instanceof Float) {
+            return Float.toString((Float) value);
+        }
+        if (value instanceof Double) {
+            return Double.toString((Double) value);
+        }
+        if (value instanceof Boolean) {
+            return Boolean.toString((Boolean) value);
+        }
+        if (value instanceof AbstractDto) {
+            return value.toString();
+        }
+        LOG.debug("Unknown type of variable, for field {}.", attribute.getName());
         return null;
     }
 

@@ -21,24 +21,24 @@ public class DtoTest {
 
     @Test
     public void getterSetterTest() {
-        sut.setName("name");
-        assertThat("Getter returned incorrect result.", sut.getName(), equalTo("name"));
+        sut.setTextValue("name");
+        assertThat("Getter returned incorrect result.", sut.getTextValue(), equalTo("name"));
     }
 
     @Test
     public void toStringTest() {
-        sut.setName("name");
-        sut.setValue("1");
-        sut.setTestValue("2");
-        String expected = "{name: name, value: 1, testValue: 2}";
+        sut.setTextValue("name");
+        sut.setIntValue(1);
+        sut.setBoolValue(true);
+        String expected = "{textValue: name, boolValue: true, intValue: 1}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void toStringPartialInitTest() {
-        sut.setName("name");
-        String expected = "{name: name}";
-        assertThat("Partially inited object converted to string wrong.", sut.toString(), equalTo(expected));
+        sut.setTextValue("name");
+        String expected = "{textValue: name}";
+        assertThat("Partially initialized object converted to string wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
@@ -50,45 +50,56 @@ public class DtoTest {
     @Test
     public void equalsTest() {
         ExampleDto expected = new ExampleDto();
-        expected.setName("name");
-        expected.setValue("value");
-        sut.setName("name");
-        sut.setValue("value");
+        expected.setTextValue("name");
+        expected.setIntValue(100);
+        sut.setTextValue("name");
+        sut.setIntValue(100);
         assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
     public void notEqualsTest() {
         ExampleDto expected = new ExampleDto();
-        expected.setName("name");
-        expected.setValue("value");
-        sut.setName("name1");
-        sut.setValue("value1");
+        expected.setTextValue("name");
+        expected.setBoolValue(true);
+        sut.setTextValue("name1");
+        sut.setBoolValue(false);
         assertThat("Objects are equal.", sut, not(equalTo(expected)));
     }
 
     @Test
     public void partialEqualTest() {
         ExampleDto expected = new ExampleDto();
-        expected.setName("name");
-        sut.setName("name");
-        sut.setValue("value");
+        expected.setTextValue("name");
+        sut.setTextValue("name");
+        sut.setBoolValue(true);
         assertThat("Objects aren't equal.", sut, equalTo(expected));
     }
 
     @Test
     public void partialNotEqualTest() {
         ExampleDto expected = new ExampleDto();
-        expected.setName("name");
-        expected.setName("value");
-        sut.setValue("value");
+        expected.setTextValue("name");
+        expected.setBoolValue(true);
+        sut.setTextValue("value");
         assertThat("Objects aren't equal.", sut, not(equalTo(expected)));
     }
 
     @Test
-    public void hashTest() {
-        sut.setName("name");
-        sut.setValue("value");
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-528070181));
+    public void nestedDtoTest() {
+        sut.setTextValue("some text");
+        ExampleDto newDto = new ExampleDto();
+        newDto.setTextValue("some inner text");
+        sut.setDto(newDto);
+        String expected = "{textValue: some text, dto: {textValue: some inner text}}";
+        assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
+
+    @Test
+    public void hashTest() {
+        sut.setTextValue("name");
+        sut.setBoolValue(true);
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(420606852));
+    }
+
 }
