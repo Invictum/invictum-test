@@ -37,13 +37,13 @@ public class DtoTest {
     @Test
     public void toStringPartialInitTest() {
         sut.setTextValue("name");
-        String expected = "{textValue: name, intValue: 0}";
-        assertThat("Partially inited object converted to string wrong.", sut.toString(), equalTo(expected));
+        String expected = "{textValue: name}";
+        assertThat("Partially initialized object converted to string wrong.", sut.toString(), equalTo(expected));
     }
 
     @Test
     public void toStringNullObjectTest() {
-        String expected = "{intValue: 0}";
+        String expected = "{null}";
         assertThat("Null object converted to string wrong..", sut.toString(), equalTo(expected));
     }
 
@@ -86,10 +86,20 @@ public class DtoTest {
     }
 
     @Test
+    public void nestedDtoTest() {
+        sut.setTextValue("some text");
+        ExampleDto newDto = new ExampleDto();
+        newDto.setTextValue("some inner text");
+        sut.setDto(newDto);
+        String expected = "{textValue: some text, dto: {textValue: some inner text}}";
+        assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
+    }
+
+    @Test
     public void hashTest() {
         sut.setTextValue("name");
         sut.setBoolValue(true);
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(1456003847));
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(420606852));
     }
 
 }

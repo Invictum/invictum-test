@@ -4,6 +4,7 @@ import com.github.invictum.dto.annotation.DtoAttribute;
 import com.github.invictum.dto.annotation.KeyAttribute;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +41,17 @@ public class AbstractDto {
         if (value instanceof Float) {
             return Float.toString((Float) value);
         }
+        if (value instanceof Double) {
+            return Double.toString((Double) value);
+        }
         if (value instanceof Boolean) {
             return Boolean.toString((Boolean) value);
         }
-        return object.toString();
+        if (value instanceof AbstractDto) {
+            return value.toString();
+        }
+        LOG.debug("Unknown type of variable, for field {}.", attribute.getName());
+        return null;
     }
 
     private List<Attribute> getData(Object object, boolean includeNulls) {
@@ -67,7 +75,7 @@ public class AbstractDto {
 
     @Override
     public String toString() {
-        String stringView = "";
+        String stringView = StringUtils.EMPTY;
         List<Attribute> data = getData(this, FULL_DTO_VIEW);
         if (data.isEmpty()) {
             return "{null}";

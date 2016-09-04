@@ -12,7 +12,18 @@ public class ExampleDto extends AbstractDto {
     private Boolean boolValue;
 
     @DtoAttribute
-    private int intValue;
+    private Integer intValue;
+
+    @DtoAttribute
+    private ExampleDto dto;
+
+    public ExampleDto getDto() {
+        return dto;
+    }
+
+    public void setDto(ExampleDto dto) {
+        this.dto = dto;
+    }
 
     public String getTextValue() {
         return textValue;
