@@ -54,7 +54,9 @@ public class PanelFactory {
      */
     public static <T extends AbstractPanel> T get(final Class<T> panelClass, final AbstractPage parentPage) {
         T panelInstance = getPanel(panelClass);
-        strategy.apply(parentPage);
+        if (!panelClass.isAnnotationPresent(DisableGlobalInitStrategy.class)) {
+            strategy.apply(parentPage);
+        }
         panelInstance.initWith(parentPage);
         invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
