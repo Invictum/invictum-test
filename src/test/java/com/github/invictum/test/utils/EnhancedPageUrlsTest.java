@@ -11,7 +11,11 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.mock;
@@ -23,12 +27,13 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class EnhancedPageUrlsTest {
 
     private AbstractPage pageMock = null;
+    private UnifiedDataProvider dataProvider = null;
 
     @Before
     public void setupTest() throws Exception {
         pageMock = mock(AbstractPage.class);
         mockStatic(UnifiedDataProviderFactory.class);
-        UnifiedDataProvider dataProvider = new UnifiedDataProvider();
+        dataProvider = new UnifiedDataProvider();
         when(UnifiedDataProviderFactory.class, "getInstance", anyObject()).thenReturn(dataProvider);
         mockStatic(UrlUtil.class);
     }
@@ -59,5 +64,40 @@ public class EnhancedPageUrlsTest {
         when(UrlUtil.class, "buildPageUrl", anyObject(), anyObject()).thenReturn("http://host:8080/path-{1}/{2}");
         EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
         assertThat("Url was build wrong.", sud.getPageUrlPattern(), equalTo("http://host:8080/path-.+?/.+?"));
+    }
+
+    @Test
+    public void getNamedUrlTest() throws Exception {
+        Map<String, String> urls = new HashMap<>();
+        urls.put("key", "/url");
+        dataProvider.setUrls(urls);
+        EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
+        assertThat("Url key is absent.", sud.getNamedUrl("key"), equalTo("/url"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getNamedUrlNoKeyTest() throws Exception {
+        dataProvider.setUrls(new HashMap<String, String>());
+        EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
+        sud.getNamedUrl("key");
+    }
+
+    @Test
+    public void getStartingUrlTest() throws Exception {
+        String url = "http://example.org/";
+        when(UrlUtil.class, "buildPageUrlUnsafe", anyObject(), anyObject()).thenReturn(url);
+        EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
+        sud.overrideUrlOnce("key");
+        assertThat("Starting Url is wrong.", sud.getStartingUrl(), equalTo(url));
+    }
+
+    @Test
+    public void overrideOnceTest() throws Exception {
+        when(UrlUtil.class, "buildPageUrlUnsafe", anyObject(), anyObject()).thenReturn("/someUrl");
+        EnhancedPageUrls sud = new EnhancedPageUrls(pageMock);
+        sud.overrideUrlOnce("key");
+        sud.getStartingUrl();
+        String actual = sud.getStartingUrl();
+        assertThat("Url key isn't null.", actual, nullValue());
     }
 }
