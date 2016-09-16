@@ -1,8 +1,8 @@
 package com.github.invictum.fixtures;
 
 import com.github.invictum.utils.ResourceProvider;
-import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
@@ -10,10 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.FixturesPackageName;
+
 public class FixtureProcessor {
 
-    public static final String FIXTURES_PACKAGE = PropertiesUtil
-            .getProperty(EnhancedSystemProperty.FixturesPackageName);
+    public static final String FIXTURES_PACKAGE = PropertiesUtil.getProperty(FixturesPackageName);
     private final static Logger LOG = LoggerFactory.getLogger(FixtureProcessor.class);
 
     private static Set<Class<? extends AbstractFixture>> availableFixtureClasses = new HashSet<>();
@@ -25,8 +26,11 @@ public class FixtureProcessor {
     };
 
     static {
-        if (!ResourceProvider.isPackagePresent(FIXTURES_PACKAGE)) {
-            LOG.error("Configure fixtures package with '{}' property", EnhancedSystemProperty.FixturesPackageName);
+        if (StringUtils.equals(FIXTURES_PACKAGE, FixturesPackageName.defaultValue())) {
+            LOG.info("Project root is used as fixtures package. You may redefine it with '{}' property",
+                    FixturesPackageName);
+        } else if (!ResourceProvider.isPackagePresent(FIXTURES_PACKAGE)) {
+            LOG.error("Configure fixtures package with '{}' property", FixturesPackageName);
         }
         Reflections reflections = new Reflections(ClasspathHelper.forPackage(FIXTURES_PACKAGE));
         availableFixtureClasses = reflections.getSubTypesOf(AbstractFixture.class);

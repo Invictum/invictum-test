@@ -2,7 +2,6 @@ package com.github.invictum.steps;
 
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.utils.ResourceProvider;
-import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.SerenitySystemProperties;
 import net.thucydides.core.ThucydidesSystemProperty;
@@ -17,9 +16,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.PagesPackageName;
+
 public class PageNavigationSteps extends AbstractSteps {
 
-    public static final String PAGES_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.PagesPackageName);
+    public static final String PAGES_PACKAGE = PropertiesUtil.getProperty(PagesPackageName);
     public static final String PAGE_SUFFIX = "Page";
     public static final Logger LOG = LoggerFactory.getLogger(PageNavigationSteps.class);
     public static final int TIMEOUT = SerenitySystemProperties.getProperties()
@@ -69,8 +70,10 @@ public class PageNavigationSteps extends AbstractSteps {
     }
 
     private void checkPackage() {
-        if (!ResourceProvider.isPackagePresent(PAGES_PACKAGE)) {
-            LOG.error("Configure pages package with '{}' property", EnhancedSystemProperty.PagesPackageName);
+        if (StringUtils.equals(PAGES_PACKAGE, PagesPackageName.defaultValue())) {
+            LOG.info("Project root is used as pages package. You may redefine it with '{}' property", PagesPackageName);
+        } else if (!ResourceProvider.isPackagePresent(PAGES_PACKAGE)) {
+            LOG.error("Configure pages package with '{}' property", PagesPackageName);
         }
     }
 }

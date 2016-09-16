@@ -4,7 +4,6 @@ import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.strategy.NoWaitStrategy;
 import com.github.invictum.panels.strategy.PanelInitStrategy;
 import com.github.invictum.utils.ResourceProvider;
-import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +15,12 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelsPackageName;
+
 public class PanelFactory {
 
     public static final String SUFFIX = "Panel";
-    public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(EnhancedSystemProperty.PanelsPackageName);
+    public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(PanelsPackageName);
     public static final Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
 
     private static PanelInitStrategy strategy = new NoWaitStrategy();
@@ -29,8 +30,11 @@ public class PanelFactory {
     }
 
     static {
-        if (!ResourceProvider.isPackagePresent(PANELS_PACKAGE)) {
-            LOG.error("Configure panels package with '{}' property", EnhancedSystemProperty.PanelsPackageName);
+        if (StringUtils.equals(PANELS_PACKAGE, PanelsPackageName.defaultValue())) {
+            LOG.info("Project root is used as panels package. You may redefine it with '{}' property",
+                    PanelsPackageName);
+        } else if (!ResourceProvider.isPackagePresent(PANELS_PACKAGE)) {
+            LOG.error("Configure panels package with '{}' property", PanelsPackageName);
         }
     }
 
