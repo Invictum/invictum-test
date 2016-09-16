@@ -22,6 +22,7 @@ public class UnifiedDataProviderFactory {
         Class relatedClass = relatedObject.getClass();
         if (!locatorProviders.containsKey(relatedClass)) {
             UnifiedDataProvider dataProvider = parser.load(relatedClass.getSimpleName());
+            dataProvider.setRelatedClassName(relatedClass.getSimpleName());
             locatorProviders.put(relatedClass, dataProvider);
             LOG.debug("Loaded markup for {} with {} description", relatedClass.getSimpleName(), dataProvider.getName());
         }
