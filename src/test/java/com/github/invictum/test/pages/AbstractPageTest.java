@@ -82,30 +82,12 @@ public class AbstractPageTest {
     }
 
     @Test
-    public void locateByXpathTest() throws Exception {
-        String locatorValue = "//xpath";
-        when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
-        when(driver.findElement(By.xpath(locatorValue))).thenReturn(null);
-        new AbstractPage(driver).locate("locatorKey");
-        verify(driver, times(1)).findElement(By.xpath(locatorValue));
-    }
-
-    @Test
     public void locateAllByXpathTest() throws Exception {
         String locatorValue = "//xpath";
         when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
         when(driver.findElements(By.xpath(locatorValue))).thenReturn(new ArrayList<WebElement>());
         new AbstractPage(driver).locateAll("locatorKey");
         verify(driver, times(1)).findElements(By.xpath(locatorValue));
-    }
-
-    @Test
-    public void locateByCssTest() throws Exception {
-        String locatorValue = ".css";
-        when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
-        when(driver.findElement(By.cssSelector(locatorValue))).thenReturn(null);
-        new AbstractPage(driver).locate("locatorKey");
-        verify(driver, times(1)).findElement(By.cssSelector(locatorValue));
     }
 
     @Test
