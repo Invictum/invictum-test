@@ -14,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -97,5 +98,15 @@ public class AbstractPageTest {
         when(driver.findElements(By.cssSelector(locatorValue))).thenReturn(new ArrayList<WebElement>());
         new AbstractPage(driver).locateAll("locatorKey");
         verify(driver, times(1)).findElements(By.cssSelector(locatorValue));
+    }
+
+    @Test
+    public void setPageUrlsTest() throws Exception {
+        AbstractPage page = new AbstractPage();
+        page.setPageUrls(urlsMock);
+        Field field = page.getClass().getDeclaredField("pageUrls");
+        field.setAccessible(true);
+        EnhancedPageUrls actual = (EnhancedPageUrls) field.get(page);
+        assertThat("Page urls weren't set.", actual, equalTo(urlsMock));
     }
 }
