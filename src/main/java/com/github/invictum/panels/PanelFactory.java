@@ -61,13 +61,12 @@ public class PanelFactory {
         applyGlobalStrategy(panelClass, parentPage);
         T panelInstance = getPanel(panelClass);
         String locator = UnifiedDataProviderFactory.getInstance(panelInstance).getBase();
-        WebElementFacade panel;
-        if (locator == null) {
-            panel = parentPage.find(By.xpath(FLOATING_PANEL_BASE_LOCATOR));
-        } else {
-            panel = parentPage.isXpath(locator) ? parentPage.find(By.xpath(locator)) : parentPage
-                    .find(By.cssSelector(locator));
+        if (FloatingPanel.class.isAssignableFrom(panelClass) && locator == null) {
+            locator = FLOATING_PANEL_BASE_LOCATOR;
         }
+        verifyBaseAttribute(panelClass, locator);
+        WebElementFacade panel = parentPage.isXpath(locator) ? parentPage.find(By.xpath(locator)) : parentPage
+                .find(By.cssSelector(locator));
         /** Wrap panel element into panel class. */
         panelInstance.initWith(parentPage, panel);
         invokeWhenInitializedMethods(panelInstance);
@@ -77,13 +76,14 @@ public class PanelFactory {
     public static <T extends AbstractPanel> List<T> getAll(final Class<T> panelClass, final AbstractPage parentPage) {
         applyGlobalStrategy(panelClass, parentPage);
         String locator = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
-        List<WebElementFacade> panels;
-        if (locator == null) {
-            panels = parentPage.findAll(By.xpath(FLOATING_PANEL_BASE_LOCATOR));
-        } else {
-            panels = parentPage.isXpath(locator) ? parentPage.findAll(By.xpath(locator)) : parentPage
-                    .findAll(By.cssSelector(locator));
+        /** Block ability to init a list of floating panels without base. */
+        if (FloatingPanel.class.isAssignableFrom(panelClass) && locator == null) {
+            throw new IllegalStateException(
+                    String.format("Try to init a list of Floating Panels for %s", panelClass.getSimpleName()));
         }
+        verifyBaseAttribute(panelClass, locator);
+        List<WebElementFacade> panels = parentPage.isXpath(locator) ? parentPage.findAll(By.xpath(locator)) : parentPage
+                .findAll(By.cssSelector(locator));
         /** Wrap panel elements into list of panel classes. */
         List<T> panelList = new ArrayList<>();
         for (WebElementFacade element : panels) {
@@ -93,6 +93,14 @@ public class PanelFactory {
             panelList.add(panel);
         }
         return panelList;
+    }
+
+    private static <T extends AbstractPanel> void verifyBaseAttribute(Class<T> panelClass, String locator) {
+        if (locator == null) {
+            String className = panelClass.getSimpleName();
+            LOG.error("Base attribute is absent for {}. Specify it in locators source.", panelClass);
+            throw new IllegalStateException(String.format("Unable to init %s panel", className));
+        }
     }
 
     private static <T extends AbstractPanel> void applyGlobalStrategy(Class<T> panelClass, AbstractPage parentPage) {

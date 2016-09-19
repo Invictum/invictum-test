@@ -4,6 +4,8 @@ import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.PanelFactory;
 import com.github.invictum.panels.strategy.NoWaitStrategy;
 import com.github.invictum.test.panels.instances.PanelWithDisabledStrategy;
+import com.github.invictum.test.panels.instances.TestFloatingPanel;
+import com.github.invictum.test.panels.instances.TestLocalStrategyPanel;
 import com.github.invictum.test.panels.instances.TestPanel;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
@@ -25,11 +27,12 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PanelFactoryTest {
 
     private AbstractPage pageMock = null;
+    UnifiedDataProvider dataProvider = null;
 
     @Before
     public void setupTest() throws Exception {
         mockStatic(UnifiedDataProviderFactory.class);
-        UnifiedDataProvider dataProvider = new UnifiedDataProvider();
+        dataProvider = new UnifiedDataProvider();
         dataProvider.setBase("//div");
         when(UnifiedDataProviderFactory.class, "getInstance", anyObject()).thenReturn(dataProvider);
         pageMock = mock(AbstractPage.class);
@@ -64,6 +67,12 @@ public class PanelFactoryTest {
     }
 
     @Test
+    public void localStrategyTest() {
+        PanelFactory.get(TestLocalStrategyPanel.class, pageMock);
+        verify(pageMock, times(1)).resetImplicitTimeout();
+    }
+
+    @Test
     public void globalStrategyTest() {
         NoWaitStrategy strategyMock = mock(NoWaitStrategy.class);
         PanelFactory.setPanelInitWaitStrategy(strategyMock);
@@ -77,5 +86,31 @@ public class PanelFactoryTest {
         PanelFactory.setPanelInitWaitStrategy(strategyMock);
         PanelFactory.get(PanelWithDisabledStrategy.class, pageMock);
         Mockito.verifyZeroInteractions(strategyMock);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getNoBaseTest() {
+        dataProvider.setBase(null);
+        PanelFactory.get(TestPanel.class, pageMock);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getAllNoBaseTest() {
+        dataProvider.setBase(null);
+        PanelFactory.getAll(TestPanel.class, pageMock);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getAllFloatingNoBaseTest() {
+        dataProvider.setBase(null);
+        PanelFactory.getAll(TestFloatingPanel.class, pageMock);
+    }
+
+    @Test
+    public void getFloatingNoBaseTest() {
+        dataProvider.setBase(null);
+        when(pageMock.isXpath(anyString())).thenCallRealMethod();
+        PanelFactory.get(TestFloatingPanel.class, pageMock);
+        verify(pageMock, times(1)).find(By.xpath(PanelFactory.FLOATING_PANEL_BASE_LOCATOR));
     }
 }
