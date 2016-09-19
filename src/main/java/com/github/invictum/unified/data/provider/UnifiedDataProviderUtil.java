@@ -12,7 +12,8 @@ public class UnifiedDataProviderUtil {
     public static String getDataByKey(final String key, final UnifiedDataProvider dataProvider) {
         Map<String, String> data = dataProvider.getData();
         if (!data.containsKey(key)) {
-            throw new IllegalArgumentException(String.format("Data related to '%s' key is not found.", key));
+            throw new IllegalArgumentException(String.format("Data for '%s' key is not found in scope of %s", key,
+                    dataProvider.getRelatedClassName()));
         }
         LOG.debug("Used \"{}\" data for \"{}\" key", data.get(key), key);
         return data.get(key);
@@ -21,7 +22,8 @@ public class UnifiedDataProviderUtil {
     public static String getLocatorByKey(final String key, final UnifiedDataProvider dataProvider) {
         Map<String, String> locators = dataProvider.getLocators();
         if (!locators.containsKey(key)) {
-            throw new IllegalArgumentException(String.format("Locator for '%s' key is not found.", key));
+            throw new IllegalArgumentException(String.format("Locator for '%s' key is not found in scope of %s", key,
+                    dataProvider.getRelatedClassName()));
         }
         LOG.debug("Used \"{}\" locator for \"{}\" key", locators.get(key), key);
         return locators.get(key);

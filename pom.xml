@@ -36,7 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <serenity.version>1.1.36</serenity.version>
+        <serenity.version>1.1.39</serenity.version>
     </properties>
 
     <dependencies>

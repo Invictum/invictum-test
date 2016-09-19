@@ -41,6 +41,7 @@ public class UnifiedDataProviderFactory {
             if (relatedObject instanceof AbstractPanel) {
                 dataProvider.setLocators(mergeLocators(relatedClass, AbstractPanel.class));
             }
+            dataProvider.setRelatedClassName(relatedClass.getSimpleName());
             locatorProviders.put(relatedClass, dataProvider);
             LOG.debug("Loaded markup for {} with {} description", relatedClass.getSimpleName(), dataProvider.getName());
         }

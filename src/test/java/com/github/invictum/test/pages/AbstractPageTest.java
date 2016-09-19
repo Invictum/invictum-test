@@ -14,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -82,15 +83,6 @@ public class AbstractPageTest {
     }
 
     @Test
-    public void locateByXpathTest() throws Exception {
-        String locatorValue = "//xpath";
-        when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
-        when(driver.findElement(By.xpath(locatorValue))).thenReturn(null);
-        new AbstractPage(driver).locate("locatorKey");
-        verify(driver, times(1)).findElement(By.xpath(locatorValue));
-    }
-
-    @Test
     public void locateAllByXpathTest() throws Exception {
         String locatorValue = "//xpath";
         when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
@@ -100,20 +92,21 @@ public class AbstractPageTest {
     }
 
     @Test
-    public void locateByCssTest() throws Exception {
-        String locatorValue = ".css";
-        when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
-        when(driver.findElement(By.cssSelector(locatorValue))).thenReturn(null);
-        new AbstractPage(driver).locate("locatorKey");
-        verify(driver, times(1)).findElement(By.cssSelector(locatorValue));
-    }
-
-    @Test
     public void locateAllByCssTest() throws Exception {
         String locatorValue = ".css";
         when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);
         when(driver.findElements(By.cssSelector(locatorValue))).thenReturn(new ArrayList<WebElement>());
         new AbstractPage(driver).locateAll("locatorKey");
         verify(driver, times(1)).findElements(By.cssSelector(locatorValue));
+    }
+
+    @Test
+    public void setPageUrlsTest() throws Exception {
+        AbstractPage page = new AbstractPage();
+        page.setPageUrls(urlsMock);
+        Field field = page.getClass().getDeclaredField("pageUrls");
+        field.setAccessible(true);
+        EnhancedPageUrls actual = (EnhancedPageUrls) field.get(page);
+        assertThat("Page urls weren't set.", actual, equalTo(urlsMock));
     }
 }

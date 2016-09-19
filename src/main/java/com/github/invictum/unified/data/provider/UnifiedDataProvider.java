@@ -6,6 +6,7 @@ import java.util.Map;
 public class UnifiedDataProvider {
     private String name;
     private String base;
+    private String relatedClassName;
     private Map<String, String> urls = new LinkedHashMap<>();
     private Map<String, String> locators = new LinkedHashMap<>();
     private Map<String, String> data = new LinkedHashMap<>();
@@ -48,5 +49,13 @@ public class UnifiedDataProvider {
 
     public void setUrls(Map<String, String> urls) {
         this.urls = urls;
+    }
+
+    public String getRelatedClassName() {
+        return relatedClassName;
+    }
+
+    public void setRelatedClassName(String relatedClassName) {
+        this.relatedClassName = relatedClassName;
     }
 }
