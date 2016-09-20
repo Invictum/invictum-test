@@ -70,6 +70,17 @@ public class AbstractPage extends PageObject {
     }
 
     /**
+     * Returns a list of initialized panel related to caller page.
+     *
+     * @param panelClass
+     * @param <T>
+     * @return List T
+     */
+    public <T extends AbstractPanel> List<T> getPanels(final Class<T> panelClass) {
+        return PanelFactory.getAll(panelClass, this);
+    }
+
+    /**
      * Compares current and page pattern URLs.
      *
      * @return boolean result

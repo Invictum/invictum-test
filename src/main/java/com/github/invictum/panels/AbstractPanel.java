@@ -7,10 +7,7 @@ import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderUtil;
-import net.serenitybdd.core.SerenitySystemProperties;
 import net.serenitybdd.core.pages.WebElementFacade;
-import net.serenitybdd.core.pages.WebElementFacadeImpl;
-import net.thucydides.core.ThucydidesSystemProperty;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,8 +18,6 @@ import java.util.List;
 public class AbstractPanel {
 
     private static final String PANEL_LOCATOR_PREFIX = ".";
-    protected final int timeout = SerenitySystemProperties.getProperties()
-            .getIntegerValue(ThucydidesSystemProperty.WEBDRIVER_WAIT_FOR_TIMEOUT, 10000);
     protected WebElementFacade panel;
     protected UnifiedDataProvider dataProvider;
     protected AbstractPage parentPage;
@@ -36,15 +31,9 @@ public class AbstractPanel {
         return getClass().getSimpleName();
     }
 
-    public void initWith(final AbstractPage parentPage) {
+    public void initWith(final AbstractPage parentPage, final WebElementFacade panelElement) {
         this.parentPage = parentPage;
-        if (isXpath(dataProvider.getBase())) {
-            panel = WebElementFacadeImpl
-                    .wrapWebElement(getDriver(), this.parentPage.find(By.xpath(dataProvider.getBase())), timeout);
-        } else {
-            panel = WebElementFacadeImpl
-                    .wrapWebElement(getDriver(), this.parentPage.find(By.cssSelector(dataProvider.getBase())), timeout);
-        }
+        this.panel = panelElement;
     }
 
     protected <T extends AbstractTrick> T getTrick(Class<T> trickClass) {
