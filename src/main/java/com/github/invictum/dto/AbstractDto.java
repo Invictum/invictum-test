@@ -77,6 +77,9 @@ public class AbstractDto {
         if (value instanceof Boolean) {
             return Boolean.toString((Boolean) value);
         }
+        if (value instanceof Enum) {
+            return ((Enum) value).name();
+        }
         if (value instanceof AbstractDto) {
             return value.toString();
         }
