@@ -10,10 +10,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.DefaultUrlKey;
+
 public class UrlUtil {
 
     public static final String URL_CONFIG_TAG = "url";
-    public static final String DEFAULT_URL_KEY = "default";
     public static final String DELIMER = ":";
     public static final String URL_PROPERTY_BASE = "webdriver.base.url";
     private final static Logger LOG = LoggerFactory.getLogger(UrlUtil.class);
@@ -53,12 +54,12 @@ public class UrlUtil {
         if (availableUrls.containsKey(urlKey)) {
             LOG.debug("Found url for {} key, use {} suffix", urlKey, availableUrls.get(urlKey));
             return availableUrls.get(urlKey);
-        } else if (!availableUrls.containsKey(DEFAULT_URL_KEY)) {
+        } else if (!availableUrls.containsKey(PropertiesUtil.getProperty(DefaultUrlKey))) {
             LOG.debug("Default url key isn't found, use base URL");
             return StringUtils.EMPTY;
         }
-        LOG.debug("Found default url key, use {} suffix", availableUrls.get(DEFAULT_URL_KEY));
-        return availableUrls.get(DEFAULT_URL_KEY);
+        LOG.debug("Found default url key, use {} suffix", availableUrls.get(PropertiesUtil.getProperty(DefaultUrlKey)));
+        return availableUrls.get(PropertiesUtil.getProperty(DefaultUrlKey));
     }
 
     private static String getPageUrlByKey(String urlKey) {
@@ -78,10 +79,10 @@ public class UrlUtil {
                 return baseUrl + processSuffix(avaliableUrls, urlConfigTag[0]);
             }
         }
-        return baseUrl + processSuffix(avaliableUrls, DEFAULT_URL_KEY);
+        return baseUrl + processSuffix(avaliableUrls, PropertiesUtil.getProperty(DefaultUrlKey));
     }
 
     public static String buildPageUrlUnsafe(final String key, final Map<String, String> availableUrls) {
-        return getPageUrlByKey(key) + processSuffix(availableUrls, DEFAULT_URL_KEY);
+        return getPageUrlByKey(key) + processSuffix(availableUrls, PropertiesUtil.getProperty(DefaultUrlKey));
     }
 }
