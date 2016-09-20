@@ -14,6 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.DefaultUrlKey;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.anyString;
@@ -30,6 +31,7 @@ public class UrlUtilTest {
     @Before
     public void setupTest() throws Exception {
         mockStatic(PropertiesUtil.class);
+        when(PropertiesUtil.getProperty(DefaultUrlKey)).thenReturn("default");
         mockStatic(Serenity.class);
         sessionMap.clear();
         urls.clear();
@@ -114,5 +116,14 @@ public class UrlUtilTest {
         sessionMap.addMetaData("url", "base:default");
         when(Serenity.class, "getCurrentSession").thenReturn(sessionMap);
         UrlUtil.buildPageUrl("http://host:8080", urls);
+    }
+
+    @Test
+    public void customUrlKeyTest() throws Exception {
+        when(PropertiesUtil.getProperty(DefaultUrlKey)).thenReturn("customKey");
+        urls.put("customKey", "/custom");
+        when(Serenity.class, "getCurrentSession").thenReturn(sessionMap);
+        assertThat("Url was build wrong.", UrlUtil.buildPageUrl("http://example.org", urls),
+                equalTo("http://example.org/custom"));
     }
 }

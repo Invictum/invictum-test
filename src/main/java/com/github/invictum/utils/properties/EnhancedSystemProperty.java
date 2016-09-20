@@ -12,7 +12,8 @@ public enum EnhancedSystemProperty {
     LayoutExpectedDirectory("layout.expected.directory", "src/test/resources/images/"),
     LayoutResultsDirectory("layout.results.directory", "target/layout/results/"),
     LayoutImageExtension("layout.image.extension", "png"),
-    ApiEndpointDefault("api.endpoint.default", "http://localhost:8080");
+    ApiEndpointDefault("api.endpoint.default", "http://localhost:8080"),
+    DefaultUrlKey("default.url.key", "default");
 
     private String key;
     private String defaultValue;
