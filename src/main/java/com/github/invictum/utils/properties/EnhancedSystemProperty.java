@@ -14,7 +14,8 @@ public enum EnhancedSystemProperty {
     LayoutImageExtension("layout.image.extension", "png"),
     ApiEndpointDefault("api.endpoint.default", "http://localhost:8080"),
     DefaultUrlKey("default.url.key", "default"),
-    DataProviderParser("data.provider.parser", "com.github.invictum.unified.data.provider.parsers.YamlParser");
+    DataProviderParser("data.provider.parser", "com.github.invictum.unified.data.provider.parsers.YamlParser"),
+    PanelInitStrategy("panel.init.strategy", "com.github.invictum.panels.strategy.NoWaitStrategy");
 
     private String key;
     private String defaultValue;

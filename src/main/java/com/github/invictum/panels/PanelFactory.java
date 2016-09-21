@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelInitStrategy;
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelsPackageName;
 
 public class PanelFactory {
@@ -41,6 +42,21 @@ public class PanelFactory {
         } else if (!ResourceProvider.isPackagePresent(PANELS_PACKAGE)) {
             LOG.error("Configure panels package with '{}' property", PanelsPackageName);
         }
+        initStrategy();
+    }
+
+    private static void initStrategy() {
+        String strategyName = PropertiesUtil.getProperty(PanelInitStrategy);
+        if (StringUtils.equals(strategyName, PanelInitStrategy.defaultValue())) {
+            LOG.warn("Default panel init strategy is used '{}'. You may redefine it with '{}' property", strategyName,
+                    PanelInitStrategy);
+        }
+        try {
+            strategy = (PanelInitStrategy) Class.forName(strategyName).newInstance();
+            LOG.debug("Used '{}' panel init strategy");
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException(String.format("Failed to init %s strategy", strategyName));
+        }
     }
 
     /**
@@ -48,6 +64,7 @@ public class PanelFactory {
      *
      * @param strategyToSet
      */
+    @Deprecated
     public static void setPanelInitWaitStrategy(PanelInitStrategy strategyToSet) {
         strategy = strategyToSet;
         LOG.info("Set {} strategy", strategyToSet);

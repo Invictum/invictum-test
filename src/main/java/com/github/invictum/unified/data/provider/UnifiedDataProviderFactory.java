@@ -31,6 +31,7 @@ public class UnifiedDataProviderFactory {
         }
         try {
             parser = (Parser) Class.forName(parserClassName).newInstance();
+            LOG.debug("Used '{}' unified data provider parser", parserClassName);
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(String.format("Unable to init '%s' parser", parserClassName));
         }
