@@ -1,5 +1,6 @@
 package com.github.invictum.fixtures;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +24,16 @@ public abstract class AbstractFixture implements Fixture {
 
     @Override
     public String toString() {
-        String paramSting = "";
+        String paramSting = StringUtils.EMPTY;
         if (params != null) {
             for (String param : params) {
                 paramSting += String.format("%s ", param);
             }
         }
-        paramSting = paramSting.trim();
-        return String.format("%s {%s}", getClass().getSimpleName(), paramSting);
+        return String.format("%s {%s}", getClass().getSimpleName(), paramSting.trim());
     }
 
     protected String getParam(int paramIndex) {
-        return params.get(paramIndex);
+        return ((paramIndex + 1) <= params.size()) ? params.get(paramIndex) : null;
     }
 }
