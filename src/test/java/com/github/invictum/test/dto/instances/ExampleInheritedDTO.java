@@ -1,4 +1,4 @@
-package com.github.invictum.test.dto;
+package com.github.invictum.test.dto.instances;
 
 import com.github.invictum.dto.annotation.DtoAttribute;
 

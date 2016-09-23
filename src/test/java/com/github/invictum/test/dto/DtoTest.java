@@ -1,5 +1,7 @@
 package com.github.invictum.test.dto;
 
+import com.github.invictum.test.dto.instances.EnumAttribute;
+import com.github.invictum.test.dto.instances.ExampleDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,8 @@ public class DtoTest {
         sut.setTextValue("name");
         sut.setIntValue(1);
         sut.setBoolValue(true);
-        String expected = "{textValue: name, boolValue: true, intValue: 1}";
+        sut.setEnumValue(EnumAttribute.ALPHA);
+        String expected = "{textValue: name, boolValue: true, intValue: 1, enumValue: ALPHA}";
         assertThat("To string method proceed wrong.", sut.toString(), equalTo(expected));
     }
 
@@ -99,7 +102,7 @@ public class DtoTest {
     public void hashTest() {
         sut.setTextValue("name");
         sut.setBoolValue(true);
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(420606852));
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-891793549));
     }
 
 }

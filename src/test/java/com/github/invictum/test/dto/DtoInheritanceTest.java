@@ -1,5 +1,6 @@
 package com.github.invictum.test.dto;
 
+import com.github.invictum.test.dto.instances.ExampleInheritedDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,6 +67,6 @@ public class DtoInheritanceTest {
     public void hashTest() {
         sut.setTextValue("Some text");
         sut.setText1("Text 2");
-        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-62715168));
+        assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(1305093015));
     }
 }

@@ -1,4 +1,4 @@
-package com.github.invictum.test.dto;
+package com.github.invictum.test.dto.instances;
 
 import com.github.invictum.dto.AbstractDto;
 import com.github.invictum.dto.annotation.DtoAttribute;
@@ -16,6 +16,9 @@ public class ExampleDto extends AbstractDto {
 
     @DtoAttribute
     private ExampleDto dto;
+
+    @DtoAttribute
+    private EnumAttribute enumValue;
 
     public ExampleDto getDto() {
         return dto;
@@ -47,5 +50,13 @@ public class ExampleDto extends AbstractDto {
 
     public void setIntValue(int intValue) {
         this.intValue = intValue;
+    }
+
+    public EnumAttribute getEnumValue() {
+        return enumValue;
+    }
+
+    public void setEnumValue(EnumAttribute enumValue) {
+        this.enumValue = enumValue;
     }
 }

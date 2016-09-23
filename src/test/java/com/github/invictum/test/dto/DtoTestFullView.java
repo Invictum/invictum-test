@@ -1,5 +1,6 @@
 package com.github.invictum.test.dto;
 
+import com.github.invictum.test.dto.instances.ExampleDto;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.junit.Before;
