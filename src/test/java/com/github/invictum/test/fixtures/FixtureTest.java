@@ -26,7 +26,19 @@ public class FixtureTest {
     }
 
     @Test
+    public void paramAbsentTest() {
+        fixture.setParams(new String[] {"param"});
+        assertThat("Parameter value with non-existing index is wrong.", fixture.getParam(1), equalTo(null));
+    }
+
+    @Test
     public void toStringTest() {
+        fixture.setParams(new String[] {"param1", "param2"});
+        assertThat("Fixture name is wrong.", fixture.toString(), equalTo("ExampleFixture {param1 param2}"));
+    }
+
+    @Test
+    public void toStringNoParamTest() {
         assertThat("Fixture name is wrong.", fixture.toString(), equalTo("ExampleFixture {}"));
     }
 }
