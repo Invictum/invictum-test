@@ -69,6 +69,10 @@ public class AbstractPage extends PageObject {
         return PanelFactory.get(panelClass, this);
     }
 
+    public boolean isPanelVisible(Class<? extends AbstractPanel> panelClass) {
+        return PanelFactory.isPanelVisible(panelClass, this);
+    }
+
     /**
      * Returns a list of initialized panel related to caller page.
      *

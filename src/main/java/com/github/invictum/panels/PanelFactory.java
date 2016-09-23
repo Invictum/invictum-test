@@ -3,6 +3,7 @@ package com.github.invictum.panels;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.strategy.NoWaitStrategy;
 import com.github.invictum.panels.strategy.PanelInitStrategy;
+import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.PropertiesUtil;
@@ -92,6 +93,18 @@ public class PanelFactory {
         panelInstance.initWith(parentPage, panel);
         invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
+    }
+
+    /**
+     * Method checks panels visibility gracefully.
+     *
+     * @param panelClass
+     * @param parentPage
+     * @return boolean
+     */
+    public static boolean isPanelVisible(Class<? extends AbstractPanel> panelClass, AbstractPage parentPage) {
+        String locator = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
+        return parentPage.getTrick(Visibility.class).isElementVisible(locator);
     }
 
     public static <T extends AbstractPanel> List<T> getAll(final Class<T> panelClass, final AbstractPage parentPage) {
