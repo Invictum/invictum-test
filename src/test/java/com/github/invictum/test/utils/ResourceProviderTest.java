@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,12 +36,12 @@ public class ResourceProviderTest {
         assertThat("Newest file selected wrong.", actual, equalTo(expected));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = NoSuchElementException.class)
     public void fileNonExistTest() throws IOException {
         ResourceProvider.getFile("", "file");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = NoSuchElementException.class)
     public void fileNonExistSuffixTest() throws IOException {
         folder.newFile("firstFile");
         folder.newFile("secondFile");

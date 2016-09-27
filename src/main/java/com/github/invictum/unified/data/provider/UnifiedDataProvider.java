@@ -1,5 +1,7 @@
 package com.github.invictum.unified.data.provider;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,5 +59,17 @@ public class UnifiedDataProvider {
 
     public void setRelatedClassName(String relatedClassName) {
         this.relatedClassName = relatedClassName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        UnifiedDataProvider data = (UnifiedDataProvider) obj;
+        return StringUtils.equals(data.getBase(), this.getBase()) && StringUtils
+                .equals(data.getName(), this.getName()) && StringUtils
+                .equals(data.getRelatedClassName(), this.getRelatedClassName()) && data.urls
+                .equals(this.urls) && data.locators.equals(this.locators) && data.data.equals(this.data);
     }
 }

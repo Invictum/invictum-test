@@ -33,7 +33,6 @@ public class ResourceProvider {
                 .listFiles(rootDirectory, FileFilterUtils.nameFileFilter(fileName), FileFilterUtils.trueFileFilter());
         if (fileList.isEmpty()) {
             LOG.error("Unable to find '{}' in '{}' directory", fileName, rootDirectory);
-            throw new IllegalStateException();
         }
         return fileList.iterator().next();
     }

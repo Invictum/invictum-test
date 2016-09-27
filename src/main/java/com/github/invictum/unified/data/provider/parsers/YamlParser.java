@@ -11,7 +11,6 @@ import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class YamlParser implements Parser {
 
@@ -20,14 +19,13 @@ public class YamlParser implements Parser {
 
     @Override
     public UnifiedDataProvider load(final String fileName) {
-        UnifiedDataProvider unifiedDataProvider = null;
         try {
             File yamlFile = ResourceProvider.getFile(locatorDirectory, fileName + ".yaml");
             Yaml yaml = new Yaml(new Constructor(UnifiedDataProvider.class));
-            unifiedDataProvider = (UnifiedDataProvider) yaml.load(new FileInputStream(yamlFile));
-        } catch (FileNotFoundException e) {
+            return (UnifiedDataProvider) yaml.load(new FileInputStream(yamlFile));
+        } catch (Exception e) {
             LOG.error("Yaml file not found for {}", fileName);
+            return new UnifiedDataProvider();
         }
-        return unifiedDataProvider;
     }
 }
