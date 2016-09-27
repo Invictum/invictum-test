@@ -7,6 +7,7 @@ import com.github.invictum.test.panels.instances.PanelWithDisabledStrategy;
 import com.github.invictum.test.panels.instances.TestFloatingPanel;
 import com.github.invictum.test.panels.instances.TestLocalStrategyPanel;
 import com.github.invictum.test.panels.instances.TestPanel;
+import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import net.serenitybdd.core.annotations.findby.By;
@@ -17,6 +18,8 @@ import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -112,5 +115,15 @@ public class PanelFactoryTest {
         when(pageMock.isXpath(anyString())).thenCallRealMethod();
         PanelFactory.get(TestFloatingPanel.class, pageMock);
         verify(pageMock, times(1)).find(By.xpath(PanelFactory.FLOATING_PANEL_BASE_LOCATOR));
+    }
+
+    @Test
+    public void isPanelVisibleTest() {
+        String locator = "//div";
+        dataProvider.setBase(locator);
+        Visibility trickMock = mock(Visibility.class);
+        when(pageMock.getTrick(Visibility.class)).thenReturn(trickMock);
+        when(trickMock.isElementVisible(locator)).thenReturn(true);
+        assertThat("Panel is invisible.", PanelFactory.isPanelVisible(TestPanel.class, pageMock), equalTo(true));
     }
 }
