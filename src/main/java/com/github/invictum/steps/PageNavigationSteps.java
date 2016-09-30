@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PagesPackageName;
 
+/**
+ * Utils steps class allows to open pages in more easy way.
+ */
 public class PageNavigationSteps extends AbstractSteps {
 
     public static final String PAGES_PACKAGE = PropertiesUtil.getProperty(PagesPackageName);
@@ -36,42 +39,73 @@ public class PageNavigationSteps extends AbstractSteps {
         checkPackage();
     }
 
+    /**
+     * Method opens page by its string name representation.
+     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home -> Home + Suffix).
+     *
+     * @param pageName String
+     */
     @Step
     public void openPage(String pageName) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
-        pageToOpen.open();
-        pageToOpen.resetImplicitTimeout();
+        open(pageToOpen);
     }
 
+    /**
+     * method opens page by its class.
+     *
+     * @param pageClass Class
+     */
+    @Step
+    public void openPage(Class<? extends AbstractPage> pageClass) {
+        AbstractPage page = pages().getPage(pageClass);
+        open(page);
+    }
+
+    /**
+     * Method opens page by its string name representation and additional parameters.
+     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home -> Home + Suffix).
+     *
+     * @param pageName String
+     */
     @Step
     public void openPageWithParams(String pageName, String... params) {
         AbstractPage pageToOpen = getPageByName(pageName);
-        pageToOpen.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
-        pageToOpen.open(params);
-        pageToOpen.resetImplicitTimeout();
+        open(pageToOpen, params);
+    }
+
+    /**
+     * Method opens page by its class with additional parameters.
+     *
+     * @param pageClass Class
+     */
+    @Step
+    public void openPageWithParams(Class<? extends AbstractPage> pageClass, String... params) {
+        AbstractPage page = pages().getPage(pageClass);
+        open(page, params);
+    }
+
+    private void open(AbstractPage page, String... parameters) {
+        page.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
+        page.open(parameters);
+        page.resetImplicitTimeout();
     }
 
     private AbstractPage getPageByName(String pageName) {
         String fullPageName = String.format("%s%s", pageName, PAGE_SUFFIX);
-        AbstractPage resultPage = null;
         Reflections reflections = new Reflections(ClasspathHelper.forPackage(PAGES_PACKAGE));
         Set<Class<? extends AbstractPage>> availableClasses = reflections.getSubTypesOf(AbstractPage.class);
         for (Class<? extends AbstractPage> pageClass : availableClasses) {
             if (StringUtils.equals(pageClass.getSimpleName(), fullPageName)) {
-                resultPage = pages().getPage(pageClass);
-                break;
+                return pages().getPage(pageClass);
             }
         }
-        if (resultPage == null) {
-            throw new IllegalStateException(String.format("%s page is not found", pageName));
-        }
-        return resultPage;
+        throw new IllegalStateException(String.format("%s page is not found", pageName));
     }
 
     private void checkPackage() {
         if (StringUtils.equals(PAGES_PACKAGE, PagesPackageName.defaultValue())) {
-            LOG.info("Project root is used as pages package. You may redefine it with '{}' property", PagesPackageName);
+            LOG.warn("Project root is used as pages package. You may redefine it with '{}' property", PagesPackageName);
         } else if (!ResourceProvider.isPackagePresent(PAGES_PACKAGE)) {
             LOG.error("Configure pages package with '{}' property", PagesPackageName);
         }
