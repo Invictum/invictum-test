@@ -1,0 +1,2 @@
+string: "$text.randomAlphabetic(10)"
+integer: $math.max(10,20)

@@ -1,4 +1,4 @@
-Unified Test Core
+Invictum Test (previously known as Unified Test Core)
 --------
 
 Based on serenity core project.
