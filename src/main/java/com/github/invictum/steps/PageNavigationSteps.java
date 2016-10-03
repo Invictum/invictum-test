@@ -41,7 +41,7 @@ public class PageNavigationSteps extends AbstractSteps {
 
     /**
      * Method opens page by its string name representation.
-     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home -> Home + Suffix).
+     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home became Home + Suffix).
      *
      * @param pageName String
      */
@@ -52,7 +52,7 @@ public class PageNavigationSteps extends AbstractSteps {
     }
 
     /**
-     * method opens page by its class.
+     * Method opens page by its class.
      *
      * @param pageClass Class
      */
@@ -64,7 +64,7 @@ public class PageNavigationSteps extends AbstractSteps {
 
     /**
      * Method opens page by its string name representation and additional parameters.
-     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home -> Home + Suffix).
+     * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home became Home + Suffix).
      *
      * @param pageName String
      */

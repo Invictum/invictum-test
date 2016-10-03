@@ -63,7 +63,7 @@ public class AbstractPage extends PageObject {
      *
      * @param panelClass T
      * @param <T>        AbstractPanel
-     * @return T
+     * @return T panelInstance
      */
     public <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
         return PanelFactory.get(panelClass, this);
@@ -76,8 +76,8 @@ public class AbstractPage extends PageObject {
     /**
      * Returns a list of initialized panel related to caller page.
      *
-     * @param panelClass
-     * @param <T>
+     * @param panelClass class
+     * @param <T>        template
      * @return List T
      */
     public <T extends AbstractPanel> List<T> getPanels(final Class<T> panelClass) {
