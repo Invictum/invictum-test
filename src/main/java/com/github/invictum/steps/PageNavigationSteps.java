@@ -67,6 +67,7 @@ public class PageNavigationSteps extends AbstractSteps {
      * Mind the page construction logic, it adds PAGE_SUFFIX to given parameter. (e. g. Home became Home + Suffix).
      *
      * @param pageName String
+     * @param params String[]
      */
     @Step
     public void openPageWithParams(String pageName, String... params) {
@@ -78,6 +79,7 @@ public class PageNavigationSteps extends AbstractSteps {
      * Method opens page by its class with additional parameters.
      *
      * @param pageClass Class
+     * @param params String[]
      */
     @Step
     public void openPageWithParams(Class<? extends AbstractPage> pageClass, String... params) {

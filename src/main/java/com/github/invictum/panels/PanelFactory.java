@@ -63,7 +63,7 @@ public class PanelFactory {
     /**
      * Set panel init wait strategy.
      *
-     * @param strategyToSet
+     * @param strategyToSet PanelInitStrategy
      */
     @Deprecated
     public static void setPanelInitWaitStrategy(PanelInitStrategy strategyToSet) {
@@ -74,9 +74,9 @@ public class PanelFactory {
     /**
      * Method returns initialized panel by its class.
      *
-     * @param panelClass
-     * @param parentPage
-     * @param <T>
+     * @param panelClass panelClass
+     * @param parentPage parentPage
+     * @param <T> template
      * @return Panel
      */
     public static <T extends AbstractPanel> T get(final Class<T> panelClass, final AbstractPage parentPage) {
@@ -98,8 +98,8 @@ public class PanelFactory {
     /**
      * Method checks panels visibility gracefully.
      *
-     * @param panelClass
-     * @param parentPage
+     * @param panelClass panelClass
+     * @param parentPage parentPage
      * @return boolean
      */
     public static boolean isPanelVisible(Class<? extends AbstractPanel> panelClass, AbstractPage parentPage) {
@@ -177,7 +177,7 @@ public class PanelFactory {
     /**
      * Returns panel representation as WebElementFacade.
      *
-     * @param panelName
+     * @param panelName panelName
      * @return WebElementFacade
      */
     @Deprecated
