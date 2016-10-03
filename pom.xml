@@ -3,13 +3,18 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.invictum</groupId>
-    <artifactId>unified-test-core</artifactId>
-    <version>0.1.16-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <artifactId>invictum-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>invictum-test-core</module>
+        <module>invictum-test-junit</module>
+    </modules>
+
+    <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Used as a base for automation. Based on Serenity BDD project.</description>
-    <url>https://github.com/Invictum/unified-test-core</url>
+    <url>https://github.com/Invictum/invictum-test</url>
 
     <licenses>
         <license>
@@ -32,9 +37,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:Invictum/unified-test-core.git</connection>
-        <developerConnection>scm:git:git@github.com:Invictum/unified-test-core.git</developerConnection>
-        <url>git@github.com:Invictum/unified-test-core.git</url>
+        <connection>scm:git:git@github.com:Invictum/invictum-test.git</connection>
+        <developerConnection>scm:git:git@github.com:Invictum/invictum-test.git</developerConnection>
+        <url>git@github.com:Invictum/invictum-test.git</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -46,24 +51,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-core</artifactId>
-            <version>${serenity.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.serenity-bdd</groupId>
-            <artifactId>serenity-rest-assured</artifactId>
-            <version>${serenity.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.17</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -71,19 +61,9 @@
             <version>2.4</version>
         </dependency>
         <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>1.10</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.21</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>json-schema-validator</artifactId>
-            <version>2.9.0</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -122,8 +102,9 @@
                 <version>2.5.3</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <useReleaseProfile>false</useReleaseProfile>
+                    <useReleaseProfile>true</useReleaseProfile>
                     <releaseProfiles>release</releaseProfiles>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
