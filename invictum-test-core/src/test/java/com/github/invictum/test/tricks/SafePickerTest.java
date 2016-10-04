@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.openqa.selenium.By;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,8 @@ public class SafePickerTest {
     private SafePicker sud;
     private AbstractPage pageMock;
     private WebElementFacadeImpl webElementMock;
+    private By xpathLocator = By.xpath("//locator");
+    private By cssLocator = By.cssSelector(".class");
 
     @Before
     public void setUp() {
@@ -32,34 +35,34 @@ public class SafePickerTest {
     @Test
     public void pickTest() {
         when(webElementMock.getText()).thenReturn("value");
-        when(pageMock.findBy("//locator")).thenReturn(webElementMock);
-        assertThat("Pick result is wrong.", sud.pick("//locator"), equalTo("value"));
+        when(pageMock.find(xpathLocator)).thenReturn(webElementMock);
+        assertThat("Pick result is wrong.", sud.pick(xpathLocator), equalTo("value"));
     }
 
     @Test
     public void nullDefaultValuePickTest() {
-        when(pageMock.findBy("//locator")).thenThrow(new RuntimeException());
-        assertThat("Pick result isn't null.", sud.pick("//locator"), equalTo(null));
+        when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
+        assertThat("Pick result isn't null.", sud.pick(cssLocator), equalTo(null));
     }
 
     @Test
     public void customDefaultValuePickTest() {
-        when(pageMock.findBy("//locator")).thenThrow(new RuntimeException());
-        assertThat("Custom pick result is wrong.", sud.pick("//locator", "default"), equalTo("default"));
+        when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
+        assertThat("Custom pick result is wrong.", sud.pick(cssLocator, "default"), equalTo("default"));
     }
 
     @Test
     public void defaultTimeoutValuePickTest() {
-        when(pageMock.findBy("//locator")).thenThrow(new RuntimeException());
-        sud.pick("//locator", "default");
+        when(pageMock.find(xpathLocator)).thenThrow(new RuntimeException());
+        sud.pick(xpathLocator, "default");
         verify(pageMock, times(1)).setImplicitTimeout(100, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
 
     @Test
     public void customTimeoutValuePickTest() {
-        when(pageMock.findBy("//locator")).thenThrow(new RuntimeException());
-        sud.pick("//locator", "default", 200);
+        when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
+        sud.pick(cssLocator, "default", 200);
         verify(pageMock, times(1)).setImplicitTimeout(200, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }

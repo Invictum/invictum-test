@@ -76,7 +76,7 @@ public class PanelFactory {
      *
      * @param panelClass panelClass
      * @param parentPage parentPage
-     * @param <T> template
+     * @param <T>        template
      * @return Panel
      */
     public static <T extends AbstractPanel> T get(final Class<T> panelClass, final AbstractPage parentPage) {
@@ -103,7 +103,8 @@ public class PanelFactory {
      * @return boolean
      */
     public static boolean isPanelVisible(Class<? extends AbstractPanel> panelClass, AbstractPage parentPage) {
-        String locator = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
+        String locatorValue = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
+        By locator = parentPage.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
         return parentPage.getTrick(Visibility.class).isElementVisible(locator);
     }
 

@@ -1,7 +1,6 @@
 package com.github.invictum.panels;
 
 import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.tricks.Visibility;
 import com.github.invictum.tricks.Wait;
 import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
@@ -76,25 +75,22 @@ public class AbstractPanel {
         return parentPage.evaluateJavascript(scriptToExecute, params);
     }
 
-    protected String locator(final String locatorKey) {
+    protected String locatorValue(final String locatorKey) {
         String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
         return isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
     }
 
+    protected By locator(final String locatorKey) {
+        String locatorValue = locatorValue(locatorKey);
+        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+    }
+
     public WebElementFacade locate(final String locatorKey) {
-        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
-        if (isXpath(locator)) {
-            return findBy(By.xpath(PANEL_LOCATOR_PREFIX + locator));
-        }
-        return findBy(By.cssSelector(locator));
+        return findBy(locator(locatorKey));
     }
 
     public List<WebElementFacade> locateAll(final String locatorKey) {
-        String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
-        if (isXpath(locator)) {
-            return findAll(By.xpath(PANEL_LOCATOR_PREFIX + locator));
-        }
-        return findAll(By.cssSelector(locator));
+        return findAll(locator(locatorKey));
     }
 
     protected String data(final String dataKey) {
@@ -112,18 +108,6 @@ public class AbstractPanel {
 
     public Actions withAction() {
         return parentPage.withAction();
-    }
-
-    @Deprecated
-    public boolean isVisible(String locatorKey) {
-        String fullLocator = dataProvider.getBase() + locator(locatorKey);
-        return getTrick(Visibility.class).isElementVisible(fullLocator, panel);
-    }
-
-    @Deprecated
-    public boolean isVisible(WebElementFacade element, String locatorKey) {
-        String fullLocator = dataProvider.getBase() + locator(locatorKey);
-        return getTrick(Visibility.class).isElementVisible(fullLocator, element);
     }
 
     public void sendKeys(CharSequence... charSequences) {

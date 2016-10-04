@@ -71,6 +71,12 @@ public class AbstractPageTest {
     }
 
     @Test
+    public void isXpathWithRootTest() {
+        AbstractPage page = new AbstractPage();
+        assertThat("Specified locator classified wrong.", page.isXpath(".//div[@id]"), equalTo(true));
+    }
+
+    @Test
     public void isXpathFullDescribedTest() {
         AbstractPage page = new AbstractPage();
         assertThat("Specified locator classified wrong.", page.isXpath("html/div[@id]"), equalTo(true));

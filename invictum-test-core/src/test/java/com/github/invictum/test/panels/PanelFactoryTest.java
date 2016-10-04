@@ -10,11 +10,11 @@ import com.github.invictum.test.panels.instances.TestPanel;
 import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
-import net.serenitybdd.core.annotations.findby.By;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.openqa.selenium.By;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -119,8 +119,8 @@ public class PanelFactoryTest {
 
     @Test
     public void isPanelVisibleTest() {
-        String locator = "//div";
-        dataProvider.setBase(locator);
+        By locator = By.xpath("//div");
+        dataProvider.setBase("//div");
         Visibility trickMock = mock(Visibility.class);
         when(pageMock.getTrick(Visibility.class)).thenReturn(trickMock);
         when(trickMock.isElementVisible(locator)).thenReturn(true);

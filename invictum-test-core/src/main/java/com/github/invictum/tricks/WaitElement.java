@@ -1,6 +1,7 @@
 package com.github.invictum.tricks;
 
 import com.github.invictum.tricks.core.AbstractTrick;
+import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ public class WaitElement extends AbstractTrick {
     public static final long WAIT_TIMEOUT = 10000;
     public static final long STEP_TIMEOUT = 200;
 
-    public void isVisible(String locator, long timeout, long step) {
+    public void isVisible(By locator, long timeout, long step) {
         long timestamp = System.currentTimeMillis();
         LOG.debug("Initialized visibility wait at: {} for '{}'. Timeout: {} ms Step: {} ms", timestamp, locator,
                 timeout, step);
@@ -25,7 +26,7 @@ public class WaitElement extends AbstractTrick {
         LOG.info("Finished wait for '{}'. Wait took {} ms", locator, System.currentTimeMillis() - timestamp);
     }
 
-    public void isInvisible(String locator, long timeout, long step) {
+    public void isInvisible(By locator, long timeout, long step) {
         long timestamp = System.currentTimeMillis();
         LOG.debug("Initialized invisibility wait at: {} for '{}'. Timeout: {} ms Step: {} ms", timestamp, locator,
                 timeout, step);
@@ -39,19 +40,19 @@ public class WaitElement extends AbstractTrick {
         LOG.info("Finished wait for '{}'. Wait took {} ms", locator, System.currentTimeMillis() - timestamp);
     }
 
-    public void isVisible(String locator, long timeout) {
+    public void isVisible(By locator, long timeout) {
         isVisible(locator, timeout, STEP_TIMEOUT);
     }
 
-    public void isVisible(String locator) {
+    public void isVisible(By locator) {
         isVisible(locator, WAIT_TIMEOUT);
     }
 
-    public void isInvisible(String locator, long timeout) {
+    public void isInvisible(By locator, long timeout) {
         isInvisible(locator, timeout, STEP_TIMEOUT);
     }
 
-    public void isInvisible(String locator) {
+    public void isInvisible(By locator) {
         isInvisible(locator, WAIT_TIMEOUT);
     }
 }
