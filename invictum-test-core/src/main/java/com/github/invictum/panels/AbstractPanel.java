@@ -1,7 +1,6 @@
 package com.github.invictum.panels;
 
 import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.tricks.Visibility;
 import com.github.invictum.tricks.Wait;
 import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
@@ -82,8 +81,8 @@ public class AbstractPanel {
     }
 
     protected By locator(final String locatorKey) {
-        String locatorValue = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
-        return isXpath(locatorValue) ? By.xpath(PANEL_LOCATOR_PREFIX + locatorValue) : By.cssSelector(locatorValue);
+        String locatorValue = locatorValue(locatorKey);
+        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
     }
 
     public WebElementFacade locate(final String locatorKey) {
