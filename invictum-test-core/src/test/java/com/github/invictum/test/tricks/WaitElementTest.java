@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.openqa.selenium.By;
 
 import static org.mockito.Mockito.*;
 
@@ -16,6 +17,7 @@ public class WaitElementTest {
     private WaitElement sud;
     private AbstractPage pageMock;
     private Visibility visibilityMock;
+    private By locator = By.xpath("//div");
 
     @Before
     public void setUp() {
@@ -28,41 +30,41 @@ public class WaitElementTest {
 
     @Test
     public void isVisibleTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(false, true);
-        sud.isVisible("locator");
+        when(visibilityMock.isElementVisible(locator)).thenReturn(false, true);
+        sud.isVisible(locator);
         verify(pageMock, times(1)).waitABit(200);
     }
 
     @Test
     public void isVisibleCustomStepTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(false, true);
-        sud.isVisible("locator", 2000, 50);
+        when(visibilityMock.isElementVisible(locator)).thenReturn(false, true);
+        sud.isVisible(locator, 2000, 50);
         verify(pageMock, times(1)).waitABit(50);
     }
 
     @Test(expected = IllegalStateException.class)
     public void isVisibleCustomTimeoutTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(false);
-        sud.isVisible("locator", 300);
+        when(visibilityMock.isElementVisible(locator)).thenReturn(false);
+        sud.isVisible(locator, 300);
     }
 
     @Test
     public void isInvisibleTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(true, false);
-        sud.isInvisible("locator");
+        when(visibilityMock.isElementVisible(locator)).thenReturn(true, false);
+        sud.isInvisible(locator);
         verify(pageMock, times(1)).waitABit(200);
     }
 
     @Test
     public void isInvisibleCustomStepTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(true, false);
-        sud.isInvisible("locator", 2000, 50);
+        when(visibilityMock.isElementVisible(locator)).thenReturn(true, false);
+        sud.isInvisible(locator, 2000, 50);
         verify(pageMock, times(1)).waitABit(50);
     }
 
     @Test(expected = IllegalStateException.class)
     public void isInvisibleCustomTimeoutTest() {
-        when(visibilityMock.isElementVisible("locator")).thenReturn(true);
-        sud.isInvisible("locator", 300);
+        when(visibilityMock.isElementVisible(locator)).thenReturn(true);
+        sud.isInvisible(locator, 300);
     }
 }

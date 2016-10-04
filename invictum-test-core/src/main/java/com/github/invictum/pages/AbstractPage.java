@@ -9,10 +9,10 @@ import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderUtil;
 import com.github.invictum.utils.url.EnhancedPageUrls;
-import net.serenitybdd.core.annotations.findby.By;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.WhenPageOpens;
 import net.thucydides.core.pages.PageObject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import java.util.List;
@@ -110,8 +110,19 @@ public class AbstractPage extends PageObject {
      * @param locatorKey String
      * @return String
      */
-    protected String locator(final String locatorKey) {
+    protected String locatorValue(final String locatorKey) {
         return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
+    }
+
+    /**
+     * Method returns wrapped By locator related to current page.
+     *
+     * @param locatorKey String
+     * @return locator By
+     */
+    protected By locator(final String locatorKey) {
+        String locatorValue = locatorValue(locatorKey);
+        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
     }
 
     /**
@@ -131,8 +142,7 @@ public class AbstractPage extends PageObject {
      * @return WebElementFacade
      */
     public WebElementFacade locate(final String locatorKey) {
-        String locator = locator(locatorKey);
-        return isXpath(locator) ? find(By.xpath(locator)) : find(By.cssSelector(locator));
+        return find(locator(locatorKey));
     }
 
     /**
@@ -142,8 +152,7 @@ public class AbstractPage extends PageObject {
      * @return List WebElementFacade
      */
     public List<WebElementFacade> locateAll(final String locatorKey) {
-        String locator = locator(locatorKey);
-        return isXpath(locator) ? findAll(By.xpath(locator)) : findAll(By.cssSelector(locator));
+        return findAll(locator(locatorKey));
     }
 
     @Override

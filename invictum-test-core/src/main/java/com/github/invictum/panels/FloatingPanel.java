@@ -9,25 +9,23 @@ import java.util.List;
 public class FloatingPanel extends AbstractPanel {
 
     @Override
-    protected String locator(final String locatorKey) {
+    protected String locatorValue(final String locatorKey) {
         return UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
     }
 
     @Override
+    protected By locator(String locatorKey) {
+        String locatorValue = locatorValue(locatorKey);
+        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+    }
+
+    @Override
     public WebElementFacade locate(final String locatorKey) {
-        String locator = locator(locatorKey);
-        if (isXpath(locator)) {
-            return findBy(By.xpath(locator));
-        }
-        return findBy(By.cssSelector(locator));
+        return findBy(locator(locatorKey));
     }
 
     @Override
     public List<WebElementFacade> locateAll(final String locatorKey) {
-        String locator = locator(locatorKey);
-        if (isXpath(locator)) {
-            return findAll(By.xpath(locator));
-        }
-        return findAll(By.cssSelector(locator));
+        return findAll(locator(locatorKey));
     }
 }

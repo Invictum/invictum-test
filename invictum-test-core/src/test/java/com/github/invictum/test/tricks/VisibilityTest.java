@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class VisibilityTest {
     private Visibility sud;
     private AbstractPage pageMock;
     private WebElementFacadeImpl webElementMock;
+    private By xpathLocator = By.xpath("//locator");
+    private By cssLocator = By.xpath("div.class");
 
     @Before
     public void setUp() {
@@ -37,8 +40,8 @@ public class VisibilityTest {
         List<WebElementFacade> elementsMock = new ArrayList<>();
         elementsMock.add(webElementMock);
         when(webElementMock.isVisible()).thenReturn(true);
-        when(pageMock.findAll("//locator")).thenReturn(elementsMock);
-        assertThat("Element isn't visible.", sud.isElementVisible("//locator"), equalTo(true));
+        when(pageMock.findAll(xpathLocator)).thenReturn(elementsMock);
+        assertThat("Element isn't visible.", sud.isElementVisible(xpathLocator), equalTo(true));
     }
 
     @Test
@@ -46,8 +49,8 @@ public class VisibilityTest {
         List<WebElementFacade> elementsMock = new ArrayList<>();
         elementsMock.add(webElementMock);
         when(webElementMock.isVisible()).thenReturn(false);
-        when(pageMock.findAll("//locator")).thenReturn(elementsMock);
-        assertThat("Element is visible.", sud.isElementVisible("//locator"), equalTo(false));
+        when(pageMock.findAll(cssLocator)).thenReturn(elementsMock);
+        assertThat("Element is visible.", sud.isElementVisible(cssLocator), equalTo(false));
     }
 
     @Test
@@ -56,8 +59,8 @@ public class VisibilityTest {
         elementsMock.add(webElementMock);
         when(webElementMock.isVisible()).thenReturn(true);
         WebElementFacade panelElement = mock(WebElementFacadeImpl.class);
-        when(panelElement.thenFindAll("//locator")).thenReturn(elementsMock);
-        assertThat("Element is invisible in panel.", sud.isElementVisible("//locator", panelElement), equalTo(true));
+        when(panelElement.thenFindAll(xpathLocator)).thenReturn(elementsMock);
+        assertThat("Element is invisible in panel.", sud.isElementVisible(xpathLocator, panelElement), equalTo(true));
     }
 
     @Test
@@ -65,8 +68,8 @@ public class VisibilityTest {
         List<WebElementFacade> elementsMock = new ArrayList<>();
         elementsMock.add(webElementMock);
         when(webElementMock.isVisible()).thenReturn(true);
-        when(pageMock.findAll("//locator")).thenReturn(elementsMock);
-        sud.isElementVisible("//locator");
+        when(pageMock.findAll(xpathLocator)).thenReturn(elementsMock);
+        sud.isElementVisible(xpathLocator);
         verify(pageMock, times(1)).setImplicitTimeout(500, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
@@ -76,8 +79,8 @@ public class VisibilityTest {
         List<WebElementFacade> elementsMock = new ArrayList<>();
         elementsMock.add(webElementMock);
         when(webElementMock.isVisible()).thenReturn(true);
-        when(pageMock.findAll("//locator")).thenReturn(elementsMock);
-        sud.isElementVisible("//locator", null, 1000);
+        when(pageMock.findAll(cssLocator)).thenReturn(elementsMock);
+        sud.isElementVisible(cssLocator, null, 1000);
         verify(pageMock, times(1)).setImplicitTimeout(1000, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
