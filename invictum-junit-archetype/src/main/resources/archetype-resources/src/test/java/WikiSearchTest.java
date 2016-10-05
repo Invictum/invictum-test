@@ -3,20 +3,22 @@
 #set( $symbol_escape = '\' )
 package ${package};
 
+import com.github.invictum.EnhancedSerenityRunner;
+import com.github.invictum.data.injector.TestData;
 import com.github.invictum.steps.PageNavigationSteps;
+import com.github.invictum.url.Url;
 import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.annotations.Title;
-import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTagValuesOf;
 import ${package}.core.AbstractUiTest;
+import ${package}.dto.SearchData;
+import ${package}.pages.MainPage;
 import ${package}.steps.SearchSteps;
-import ${package}.urls.core.Url;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 @RunWith(EnhancedSerenityRunner.class)
+@WithTagValuesOf("area:wiki")
 public class WikiSearchTest extends AbstractUiTest {
 
     @Steps
@@ -25,25 +27,30 @@ public class WikiSearchTest extends AbstractUiTest {
     @Steps
     SearchSteps searchSteps;
 
+    @TestData("data/search/xml.yaml")
+    SearchData xml;
+
+    @TestData("data/search/xml.yaml")
+    SearchData json;
+
     @Test
     @Title("Basic search on Wiki")
-    @WithTag("feature2, feature1")
+    @WithTagValuesOf("area:search")
     public void basicSearch() {
-        pageNavigationSteps.openPage("Main");
-        searchSteps.fillSearchForm("xml");
+        pageNavigationSteps.openPage(MainPage.class);
+        searchSteps.fillSearchForm(xml.getSearchText());
         searchSteps.performSearch();
-        assertThat("Search result title is wrong.", searchSteps.getArticleTitle(), equalTo("XML"));
+        searchSteps.verifySearchResults(xml);
     }
 
     @Test
     @Url("italian:default")
     @Title("Basic search on Italian Wiki")
-    @WithTag("feature1")
+    @WithTagValuesOf({"area:search", "area:italian"})
     public void basicItalianSearch() {
-        pageNavigationSteps.openPage("Main");
-        searchSteps.fillSearchForm("json");
+        pageNavigationSteps.openPage(MainPage.class);
+        searchSteps.fillSearchForm(json.getSearchText());
         searchSteps.performSearch();
-        assertThat("Search result title is wrong.", searchSteps.getArticleTitle(),
-                equalTo("JavaScript Object Notation"));
+        searchSteps.verifySearchResults(json);
     }
 }

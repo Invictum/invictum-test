@@ -32,7 +32,7 @@
             <directory></directory>
             <includes>
                 <include>serenity.properties</include>
-                <include>pom.xml</include>
+                <include>README.md</include>
             </includes>
         </fileSet>
     </fileSets>

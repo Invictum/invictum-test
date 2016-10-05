@@ -3,9 +3,10 @@
 #set( $symbol_escape = '\' )
 package ${package};
 
+import com.github.invictum.EnhancedSerenityRunner;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
-import ${package}.core.AbstractApiTest;
+import net.thucydides.core.annotations.WithTagValuesOf;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,8 @@ import org.junit.runner.RunWith;
 import static com.github.invictum.utils.rest.schema.EnhancedJsonSchemaValidator.matchesJsonSchema;
 
 @RunWith(EnhancedSerenityRunner.class)
-public class DateApiTest extends AbstractApiTest {
+@WithTagValuesOf("area:api")
+public class DateApiTest {
 
     private static RequestSpecification requestSpecification = null;
 

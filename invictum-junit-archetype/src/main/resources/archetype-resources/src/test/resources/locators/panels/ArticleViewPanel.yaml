@@ -1,4 +1,0 @@
-name: Article View panel markup
-base: //div[@id = 'p-views']
-locators:
-    history: //li[@id = 'ca-history']
