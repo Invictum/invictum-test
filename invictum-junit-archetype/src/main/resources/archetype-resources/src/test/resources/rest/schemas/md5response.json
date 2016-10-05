@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "MD5 hash response",
+  "type": "object",
+  "properties": {
+    "md5": {
+      "type": "string"
+    },
+    "original": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "md5",
+    "original"
+  ]
+}

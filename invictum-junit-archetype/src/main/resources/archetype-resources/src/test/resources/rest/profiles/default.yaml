@@ -1,0 +1,6 @@
+name: Default profile
+path: /
+headers:
+    Content-Type: application/json
+cookies:
+    Test-Cookie: cookieValue
