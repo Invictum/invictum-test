@@ -1,7 +1,6 @@
 package com.github.invictum.panels;
 
 import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.tricks.Wait;
 import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
@@ -99,11 +98,6 @@ public class AbstractPanel {
 
     protected void waitABit(long milliseconds) {
         parentPage.waitABit(milliseconds);
-    }
-
-    @Deprecated
-    protected void smartWait() {
-        getTrick(Wait.class).waitForJquery(this);
     }
 
     public Actions withAction() {
