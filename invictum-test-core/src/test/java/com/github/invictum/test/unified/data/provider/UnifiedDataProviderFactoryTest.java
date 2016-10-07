@@ -5,12 +5,14 @@ import com.github.invictum.test.unified.data.provider.panels.TestChildPanel;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.unified.data.provider.parsers.YamlParser;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,28 +25,29 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(UnifiedDataProviderFactory.class)
 public class UnifiedDataProviderFactoryTest {
 
-    private static UnifiedDataProvider dataProvider = null;
-    private YamlParser mockParser = mock(YamlParser.class);
-
-    @BeforeClass
-    public static void beforeClass() {
-        dataProvider = new UnifiedDataProvider();
-        dataProvider.setName("Name");
-        dataProvider.setBase("base");
-    }
+    @Mock
+    private YamlParser parserMock;
+    private UnifiedDataProvider dataProvider;
 
     @Before
     public void beforeTest() {
-        UnifiedDataProviderFactory.restCache();
-        when(mockParser.load("Object")).thenReturn(dataProvider);
-        UnifiedDataProviderFactory.setParser(mockParser);
+        dataProvider = new UnifiedDataProvider();
+        dataProvider.setName("Name");
+        dataProvider.setBase("base");
+        when(parserMock.load(anyString())).thenReturn(dataProvider);
+        Whitebox.setInternalState(UnifiedDataProviderFactory.class, "parser", parserMock);
+    }
+
+    @After
+    public void afterTest() {
+        Whitebox.setInternalState(UnifiedDataProviderFactory.class, "locatorProviders", new HashMap<>());
     }
 
     @Test
     public void getInstanceTest() {
         UnifiedDataProvider actual = UnifiedDataProviderFactory.getInstance(new Object());
         assertThat("Returned provider is wrong.", actual, equalTo(dataProvider));
-        verify(mockParser, times(1)).load("Object");
+        verify(parserMock, times(1)).load(anyString());
     }
 
     @Test
@@ -62,7 +65,7 @@ public class UnifiedDataProviderFactoryTest {
         UnifiedDataProvider childData = new UnifiedDataProvider();
         childData.setLocators(childLocators);
 
-        when(mockParser.load(anyString())).thenReturn(childData, childData, parentData);
+        when(parserMock.load(anyString())).thenReturn(childData, childData, parentData);
         TestChildPanel panelMock = mock(TestChildPanel.class);
         parentLocators.putAll(childLocators);
         UnifiedDataProvider actual = UnifiedDataProviderFactory.getInstance(panelMock);
@@ -84,7 +87,7 @@ public class UnifiedDataProviderFactoryTest {
         UnifiedDataProvider childData = new UnifiedDataProvider();
         childData.setLocators(childLocators);
 
-        when(mockParser.load(anyString())).thenReturn(childData, childData, parentData);
+        when(parserMock.load(anyString())).thenReturn(childData, childData, parentData);
         ChildPage pageMock = mock(ChildPage.class);
         parentLocators.putAll(childLocators);
         UnifiedDataProvider actual = UnifiedDataProviderFactory.getInstance(pageMock);
@@ -97,6 +100,6 @@ public class UnifiedDataProviderFactoryTest {
         UnifiedDataProviderFactory.getInstance(new Object());
         UnifiedDataProviderFactory.getInstance(new Object());
         /** Two requests but only one load. */
-        verify(mockParser, times(1)).load("Object");
+        verify(parserMock, times(1)).load("Object");
     }
 }
