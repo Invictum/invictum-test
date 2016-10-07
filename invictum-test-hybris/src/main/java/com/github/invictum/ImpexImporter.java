@@ -25,6 +25,9 @@ public class ImpexImporter {
 
     private final static Logger LOG = LoggerFactory.getLogger(ImpexImporter.class);
 
+    private ImpexImporter() {
+    }
+
     static {
         attempt = 0;
     }

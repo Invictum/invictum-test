@@ -11,6 +11,9 @@ public class ImpexFormatter {
 
     private final static Logger LOG = LoggerFactory.getLogger(ImpexFormatter.class);
 
+    private ImpexFormatter() {
+    }
+
     public static String formatImpex(File impex, String... params) {
         try {
             String fileContent = FileUtils.readFileToString(impex, "UTF-8");
