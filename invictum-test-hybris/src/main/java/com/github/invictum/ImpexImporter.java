@@ -7,6 +7,7 @@ import com.jayway.restassured.config.SessionConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,28 +16,33 @@ import java.util.regex.Pattern;
 
 public class ImpexImporter {
 
-    public static final int MAX_ATTEMPTS = 5;
-    public static final int TIMEOUT = 5000;
+    private static final int STEP_TIMEOUT = 5000;
+    public static int importTimeout;
     private static String username;
     private static String password;
 
     private static RequestSpecification request = null;
-    private static int attempt;
+    private static StopWatch timer = new StopWatch();
 
     private final static Logger LOG = LoggerFactory.getLogger(ImpexImporter.class);
 
     private ImpexImporter() {
     }
 
-    static {
-        attempt = 0;
+    public static void setParameters(ImporterProperties properties) {
+        username = properties.getUser();
+        password = properties.getPassword();
+        importTimeout = properties.getImportTimeout();
+        buildBaseRequest(properties.getSessionKey(), properties.getUrl());
     }
 
+    @Deprecated
     public static void setCredentials(String user, String pass) {
         username = user;
         password = pass;
     }
 
+    @Deprecated
     public static void setParameters(String url, String sessionKey) {
         Pattern pattern = Pattern.compile("(http(s|)://.+?)(/|$)");
         Matcher matcher = pattern.matcher(url);
@@ -46,6 +52,10 @@ public class ImpexImporter {
         String uri = String.format("%s/hac", matcher.group(1));
         LOG.info("Using {} URI for impex upload", uri);
         LOG.debug("Using {} key for session", sessionKey);
+        buildBaseRequest(sessionKey, uri);
+    }
+
+    private static void buildBaseRequest(String sessionKey, String uri) {
         request = new RequestSpecBuilder()
                 .setConfig(RestAssuredConfig.newConfig().sessionConfig(new SessionConfig().sessionIdName(sessionKey)))
                 .setBaseUri(uri).build();
@@ -69,7 +79,7 @@ public class ImpexImporter {
             LOG.debug("Wait {} milliseconds and retry", milliseconds);
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.error("Import process was interrupted. {}", e.getLocalizedMessage());
         }
     }
 
@@ -77,26 +87,27 @@ public class ImpexImporter {
         LOG.info("Make import request");
         Response response = RestAssured.given(request).get("/console/impex/import");
         String _csrf = response.body().htmlPath().getString("html.head.meta.find { it.@name == '_csrf' }.@content");
-        response = RestAssured.given(request).param("_csrf", _csrf).param("scriptContent", impexString)
-                .param("validationEnum", "IMPORT_STRICT").param("maxThreads", "1").param("encoding", "UTF-8")
-                .param("_legacyMode", "on").param("enableCodeExecution", "true").param("_enableCodeExecution", "on")
-                .when().post("/console/impex/import");
-        if (attempt == MAX_ATTEMPTS) {
-            attempt = 0;
-            throw new IllegalStateException(String.format("Failed to authorize during %d attempts", MAX_ATTEMPTS));
-        }
-        if (response.statusCode() != 200) {
-            LOG.debug("Import failed. Try to retry {} of {} attempts", attempt, MAX_ATTEMPTS);
+        RequestSpecification importRequest = new RequestSpecBuilder().addRequestSpecification(request)
+                .addParam("_csrf", _csrf).addParam("scriptContent", impexString)
+                .addParam("validationEnum", "IMPORT_STRICT").addParam("maxThreads", "1").addParam("encoding", "UTF-8")
+                .addParam("_legacyMode", "on").addParam("enableCodeExecution", "true")
+                .addParam("_enableCodeExecution", "on").build();
+        timer.start();
+        while (response.statusCode() != 200) {
+            response = RestAssured.given(importRequest).post("/console/impex/import");
             LOG.debug(response.statusLine());
-            attempt++;
             if (response.statusCode() == 403) {
                 makeAuthorizationRequest();
             } else {
-                waitABit(TIMEOUT);
+                waitABit(STEP_TIMEOUT);
             }
-            runImport(impexString);
+            if (timer.getTime() > importTimeout) {
+                timer.reset();
+                throw new IllegalStateException(
+                        String.format("Failed to perform import more than %d ms", importTimeout));
+            }
         }
-        LOG.info("Import done at {} attempt", attempt);
-        attempt = 0;
+        LOG.info("Import done. It took {} ms", timer.getTime());
+        timer.reset();
     }
 }
