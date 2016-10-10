@@ -30,7 +30,7 @@ public class WikiSearchTest extends AbstractUiTest {
     @TestData("data/search/xml.yaml")
     SearchData xml;
 
-    @TestData("data/search/xml.yaml")
+    @TestData("data/search/json.yaml")
     SearchData json;
 
     @Test
