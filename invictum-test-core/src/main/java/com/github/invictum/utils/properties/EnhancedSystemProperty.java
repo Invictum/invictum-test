@@ -4,12 +4,10 @@ public enum EnhancedSystemProperty {
 
     LocatorsDirectory("locators.directory", "locators"),
     SchemasDirectory("rest.schemas.directory", "rest/schemas"),
-    ProfilesDirectory("rest.profiles.directory", "rest/profiles"),
     FullDtoView("full.dto.view", "false"),
     PagesPackageName("pages.package.name", "."),
     PanelsPackageName("panels.package.name", "."),
     FixturesPackageName("fixtures.package.name", "."),
-    ApiEndpointDefault("api.endpoint.default", "http://localhost:8080"),
     DefaultUrlKey("default.url.key", "default"),
     DataProviderParser("data.provider.parser", "com.github.invictum.unified.data.provider.parsers.YamlParser"),
     PanelInitStrategy("panel.init.strategy", "com.github.invictum.panels.strategy.NoWaitStrategy");
