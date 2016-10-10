@@ -10,6 +10,7 @@
     <modules>
         <module>invictum-test-core</module>
         <module>invictum-test-junit</module>
+        <module>invictum-test-hybris</module>
     </modules>
 
     <packaging>pom</packaging>
