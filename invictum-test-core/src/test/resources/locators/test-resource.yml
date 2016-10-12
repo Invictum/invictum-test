@@ -1,0 +1,9 @@
+name: "Test resource"
+base: "//base"
+relatedClassName: "testClass"
+urls:
+  default: "default"
+locators:
+  locator: "//div"
+data:
+  data: "data"
