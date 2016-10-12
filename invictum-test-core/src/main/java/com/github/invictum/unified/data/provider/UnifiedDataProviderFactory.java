@@ -65,16 +65,4 @@ public class UnifiedDataProviderFactory {
         LOG.debug("Using markup for {}", relatedClass.getSimpleName());
         return locatorProviders.get(relatedClass);
     }
-
-    @Deprecated
-    public static void setParser(final Parser parserToSet) {
-        parser = parserToSet;
-        LOG.info("Set parser to {}", parserToSet.getClass().getSimpleName());
-    }
-
-    @Deprecated
-    public static void restCache() {
-        locatorProviders = new HashMap<>();
-        LOG.debug("Cache has been reset.");
-    }
 }

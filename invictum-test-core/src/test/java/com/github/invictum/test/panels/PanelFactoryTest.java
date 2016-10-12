@@ -10,6 +10,7 @@ import com.github.invictum.test.panels.instances.TestPanel;
 import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +32,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class PanelFactoryTest {
 
     private AbstractPage pageMock = null;
-    UnifiedDataProvider dataProvider = null;
+    private UnifiedDataProvider dataProvider = null;
 
     @Before
     public void setupTest() throws Exception {
@@ -41,6 +43,11 @@ public class PanelFactoryTest {
         pageMock = mock(AbstractPage.class);
         when(pageMock.isXpath("//div")).thenReturn(true);
         when(pageMock.getDriver()).thenReturn(null);
+    }
+
+    @After
+    public void afterTest() {
+        Whitebox.setInternalState(PanelFactory.class, "strategy", new NoWaitStrategy());
     }
 
     @Test
@@ -78,7 +85,7 @@ public class PanelFactoryTest {
     @Test
     public void globalStrategyTest() {
         NoWaitStrategy strategyMock = mock(NoWaitStrategy.class);
-        PanelFactory.setPanelInitWaitStrategy(strategyMock);
+        Whitebox.setInternalState(PanelFactory.class, "strategy", strategyMock);
         PanelFactory.get(TestPanel.class, pageMock);
         verify(strategyMock, times(1)).apply(pageMock);
     }
@@ -86,7 +93,7 @@ public class PanelFactoryTest {
     @Test
     public void disabledGlobalStrategyTest() {
         NoWaitStrategy strategyMock = mock(NoWaitStrategy.class);
-        PanelFactory.setPanelInitWaitStrategy(strategyMock);
+        Whitebox.setInternalState(PanelFactory.class, "strategy", strategyMock);
         PanelFactory.get(PanelWithDisabledStrategy.class, pageMock);
         Mockito.verifyZeroInteractions(strategyMock);
     }

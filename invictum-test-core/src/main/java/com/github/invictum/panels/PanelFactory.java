@@ -10,22 +10,18 @@ import com.github.invictum.utils.properties.PropertiesUtil;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelInitStrategy;
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelsPackageName;
 
 public class PanelFactory {
 
-    public static final String SUFFIX = "Panel";
     public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(PanelsPackageName);
     public static final Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
     final static public String FLOATING_PANEL_BASE_LOCATOR = "//body";
@@ -58,17 +54,6 @@ public class PanelFactory {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException(String.format("Failed to init %s strategy", strategyName));
         }
-    }
-
-    /**
-     * Set panel init wait strategy.
-     *
-     * @param strategyToSet PanelInitStrategy
-     */
-    @Deprecated
-    public static void setPanelInitWaitStrategy(PanelInitStrategy strategyToSet) {
-        strategy = strategyToSet;
-        LOG.info("Set {} strategy", strategyToSet);
     }
 
     /**
@@ -173,30 +158,5 @@ public class PanelFactory {
             throw new IllegalStateException(String.format("Failed to init %s", panelClass));
         }
         return panelInstance;
-    }
-
-    /**
-     * Returns panel representation as WebElementFacade.
-     *
-     * @param panelName panelName
-     * @return WebElementFacade
-     */
-    @Deprecated
-    public static WebElementFacade getAsWebElement(String panelName) {
-        String fullPanelName = String.format("%s%s", panelName, SUFFIX);
-        AbstractPanel resultPanel = null;
-        Reflections reflections = new Reflections(ClasspathHelper.forPackage(PANELS_PACKAGE));
-        Set<Class<? extends AbstractPanel>> availableClasses = reflections.getSubTypesOf(AbstractPanel.class);
-        for (Class<? extends AbstractPanel> panelClass : availableClasses) {
-            if (StringUtils.equals(panelClass.getSimpleName(), fullPanelName)) {
-                resultPanel = PanelFactory.get(panelClass);
-                break;
-            }
-        }
-        if (resultPanel == null) {
-            LOG.error("{} panel is not found. Check class name and location", panelName);
-            throw new IllegalStateException();
-        }
-        return resultPanel.asWebElement();
     }
 }
