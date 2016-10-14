@@ -111,4 +111,12 @@ public class AbstractPanel {
     public WebElementFacade asWebElement() {
         return panel;
     }
+
+    protected <T extends AbstractPanel> T getPanel(final Class<T> panelClass) {
+        return parentPage.getPanel(panelClass);
+    }
+
+    protected <T extends AbstractPanel> List<T> getPanels(final Class<T> panelClass) {
+        return parentPage.getPanels(panelClass);
+    }
 }
