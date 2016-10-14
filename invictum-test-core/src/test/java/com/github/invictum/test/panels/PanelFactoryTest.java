@@ -45,11 +45,6 @@ public class PanelFactoryTest {
         when(pageMock.getDriver()).thenReturn(null);
     }
 
-    @After
-    public void afterTest() {
-        Whitebox.setInternalState(PanelFactory.class, "strategy", new NoWaitStrategy());
-    }
-
     @Test
     public void getViaXpathTest() {
         PanelFactory.get(TestPanel.class, pageMock);
@@ -80,22 +75,6 @@ public class PanelFactoryTest {
     public void localStrategyTest() {
         PanelFactory.get(TestLocalStrategyPanel.class, pageMock);
         verify(pageMock, times(1)).resetImplicitTimeout();
-    }
-
-    @Test
-    public void globalStrategyTest() {
-        NoWaitStrategy strategyMock = mock(NoWaitStrategy.class);
-        Whitebox.setInternalState(PanelFactory.class, "strategy", strategyMock);
-        PanelFactory.get(TestPanel.class, pageMock);
-        verify(strategyMock, times(1)).apply(pageMock);
-    }
-
-    @Test
-    public void disabledGlobalStrategyTest() {
-        NoWaitStrategy strategyMock = mock(NoWaitStrategy.class);
-        Whitebox.setInternalState(PanelFactory.class, "strategy", strategyMock);
-        PanelFactory.get(PanelWithDisabledStrategy.class, pageMock);
-        Mockito.verifyZeroInteractions(strategyMock);
     }
 
     @Test(expected = IllegalStateException.class)
