@@ -12,11 +12,6 @@
             <artifactId>invictum-test-junit</artifactId>
             <version>${invictumVersion}</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.6</version>
-        </dependency>
     </dependencies>
 
     <build>
