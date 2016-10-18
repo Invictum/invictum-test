@@ -12,6 +12,7 @@
         <module>invictum-junit-archetype</module>
         <module>invictum-test-hybris</module>
         <module>invictum-test-jbehave</module>
+        <module>allure-invictum-integration</module>
     </modules>
 
     <packaging>pom</packaging>

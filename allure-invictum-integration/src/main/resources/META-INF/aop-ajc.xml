@@ -1,0 +1,5 @@
+<aspectj>
+    <aspects>
+        <aspect name="com.github.invictum.aspect.SerenityStepAspect"/>
+    </aspects>
+</aspectj>
