@@ -16,13 +16,13 @@
     <description>Integration with allure reporting framework.</description>
 
     <properties>
-        <allure.version>1.4.23.HOTFIX1</allure.version>
+        <allure.version>1.5.0.RC2</allure.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>ru.yandex.qatools.allure</groupId>
-            <artifactId>allure-junit-adaptor</artifactId>
+            <artifactId>allure-java-adaptor-api</artifactId>
             <version>${allure.version}</version>
         </dependency>
         <dependency>

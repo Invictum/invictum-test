@@ -10,37 +10,7 @@ Allure integration setup
     <version>${invictum.version}</version>
 </dependency>
 ```
-  2) Tweak maven plugin configuration
-```
-<plugin>
-    <artifactId>maven-failsafe-plugin</artifactId>
-    <version>2.19.1</version>
-    <configuration>
-        <testFailureIgnore>true</testFailureIgnore>
-        <argLine>
-            -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
-        </argLine>
-        <properties>
-            <property>
-                <name>listener</name>
-                <value>com.github.invictum.AllureRunListener</value>
-            </property>
-        </properties>
-        ...
-    </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
-        </dependency>
-    </dependencies>
-    <executions>
-    ...
-    </executions>
-</plugin>
-```
-  3) Run you tests in regular way
+  2) Run you tests in regular way
 ```
 mvn clean verify
 ```
