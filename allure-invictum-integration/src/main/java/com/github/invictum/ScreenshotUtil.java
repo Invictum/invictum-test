@@ -15,6 +15,10 @@ public class ScreenshotUtil {
 
     public static final Logger LOG = LoggerFactory.getLogger(ScreenshotUtil.class);
 
+    private ScreenshotUtil() {
+        //disable default constructor.
+    }
+
     private static boolean currentTestIsABrowserTest() {
         return ThucydidesWebDriverSupport.isDriverInstantiated();
     }
