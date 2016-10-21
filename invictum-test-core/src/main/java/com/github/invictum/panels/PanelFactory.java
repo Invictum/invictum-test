@@ -1,8 +1,7 @@
 package com.github.invictum.panels;
 
 import com.github.invictum.pages.AbstractPage;
-import com.github.invictum.panels.strategy.NoWaitStrategy;
-import com.github.invictum.panels.strategy.PanelInitStrategy;
+import com.github.invictum.panels.init.PanelInitUtil;
 import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import com.github.invictum.utils.ResourceProvider;
@@ -13,11 +12,9 @@ import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelInitStrategy;
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PanelsPackageName;
 
 public class PanelFactory {
@@ -25,8 +22,6 @@ public class PanelFactory {
     public static final String PANELS_PACKAGE = PropertiesUtil.getProperty(PanelsPackageName);
     public static final Logger LOG = LoggerFactory.getLogger(PanelFactory.class);
     final static public String FLOATING_PANEL_BASE_LOCATOR = "//body";
-
-    private static PanelInitStrategy strategy = new NoWaitStrategy();
 
     private PanelFactory() {
         // disable constructor.
@@ -39,21 +34,6 @@ public class PanelFactory {
         } else if (!ResourceProvider.isPackagePresent(PANELS_PACKAGE)) {
             LOG.error("Configure panels package with '{}' property", PanelsPackageName);
         }
-        initStrategy();
-    }
-
-    private static void initStrategy() {
-        String strategyName = PropertiesUtil.getProperty(PanelInitStrategy);
-        if (StringUtils.equals(strategyName, PanelInitStrategy.defaultValue())) {
-            LOG.warn("Default panel init strategy is used '{}'. You may redefine it with '{}' property", strategyName,
-                    PanelInitStrategy);
-        }
-        try {
-            strategy = (PanelInitStrategy) Class.forName(strategyName).newInstance();
-            LOG.debug("Used '{}' panel init strategy");
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(String.format("Failed to init %s strategy", strategyName));
-        }
     }
 
     /**
@@ -65,7 +45,7 @@ public class PanelFactory {
      * @return Panel
      */
     public static <T extends AbstractPanel> T get(final Class<T> panelClass, final AbstractPage parentPage) {
-        applyGlobalStrategy(panelClass, parentPage);
+        PanelInitUtil.applyGlobalInitStrategy(panelClass, parentPage);
         T panelInstance = getPanel(panelClass);
         String locator = UnifiedDataProviderFactory.getInstance(panelInstance).getBase();
         if (FloatingPanel.class.isAssignableFrom(panelClass) && locator == null) {
@@ -76,7 +56,7 @@ public class PanelFactory {
                 .find(By.cssSelector(locator));
         /** Wrap panel element into panel class. */
         panelInstance.initWith(parentPage, panel);
-        invokeWhenInitializedMethods(panelInstance);
+        PanelInitUtil.invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
     }
 
@@ -94,7 +74,7 @@ public class PanelFactory {
     }
 
     public static <T extends AbstractPanel> List<T> getAll(final Class<T> panelClass, final AbstractPage parentPage) {
-        applyGlobalStrategy(panelClass, parentPage);
+        PanelInitUtil.applyGlobalInitStrategy(panelClass, parentPage);
         String locator = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
         /** Block ability to init a list of floating panels without base. */
         if (FloatingPanel.class.isAssignableFrom(panelClass) && locator == null) {
@@ -109,7 +89,7 @@ public class PanelFactory {
         for (WebElementFacade element : panels) {
             T panel = getPanel(panelClass);
             panel.initWith(parentPage, element);
-            invokeWhenInitializedMethods(panel);
+            PanelInitUtil.invokeWhenInitializedMethods(panel);
             panelList.add(panel);
         }
         return panelList;
@@ -120,27 +100,6 @@ public class PanelFactory {
             String className = panelClass.getSimpleName();
             LOG.error("Base attribute is absent for {}. Specify it in locators source.", panelClass);
             throw new IllegalStateException(String.format("Unable to init %s panel", className));
-        }
-    }
-
-    private static <T extends AbstractPanel> void applyGlobalStrategy(Class<T> panelClass, AbstractPage parentPage) {
-        if (!panelClass.isAnnotationPresent(DisableGlobalInitStrategy.class)) {
-            strategy.apply(parentPage);
-        }
-    }
-
-    private static void invokeWhenInitializedMethods(AbstractPanel panel) {
-        for (Method method : panel.getClass().getMethods()) {
-            if (method.isAnnotationPresent(WhenPanelInitializes.class)) {
-                LOG.debug("Found local init method for {} at {}", panel, method);
-                try {
-                    method.setAccessible(true);
-                    method.invoke(panel);
-                } catch (ReflectiveOperationException e) {
-                    LOG.error("Failed to invoke {} method", method.toString());
-                    LOG.error(e.getMessage());
-                }
-            }
         }
     }
 
