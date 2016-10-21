@@ -26,6 +26,13 @@ public class AllureStepListener implements StepListener {
         return suitUid;
     }
 
+    private void makeAttachmentIfPossible(String title) {
+        byte[] content = ScreenshotUtil.takeScreenshotContent();
+        if (content != null) {
+            allure.fire(new MakeAttachmentEvent(content, title, "image/png"));
+        }
+    }
+
     @Override
     public void testSuiteStarted(Class<?> storyClass) {
         allure.fire(new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName()));
@@ -65,6 +72,7 @@ public class AllureStepListener implements StepListener {
     @Override
     public void stepStarted(ExecutedStepDescription description) {
         allure.fire(new StepStartedEvent(description.getTitle()));
+        makeAttachmentIfPossible("Step started");
     }
 
     @Override
@@ -77,6 +85,7 @@ public class AllureStepListener implements StepListener {
     @Override
     public void stepFailed(StepFailure failure) {
         allure.fire(new StepFailureEvent().withThrowable(failure.getException()));
+        makeAttachmentIfPossible(String.format("Step failed: %s", failure.getMessage()));
         allure.fire(new StepFinishedEvent());
     }
 
@@ -106,6 +115,7 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void stepFinished() {
+        makeAttachmentIfPossible("Step finished");
         allure.fire(new StepFinishedEvent());
     }
 
