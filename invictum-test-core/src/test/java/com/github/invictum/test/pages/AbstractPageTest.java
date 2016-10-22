@@ -65,30 +65,6 @@ public class AbstractPageTest {
     }
 
     @Test
-    public void isXpathTest() {
-        AbstractPage page = new AbstractPage();
-        assertThat("Specified locator classified wrong.", page.isXpath("//div[@id]"), equalTo(true));
-    }
-
-    @Test
-    public void isXpathWithRootTest() {
-        AbstractPage page = new AbstractPage();
-        assertThat("Specified locator classified wrong.", page.isXpath(".//div[@id]"), equalTo(true));
-    }
-
-    @Test
-    public void isXpathFullDescribedTest() {
-        AbstractPage page = new AbstractPage();
-        assertThat("Specified locator classified wrong.", page.isXpath("html/div[@id]"), equalTo(true));
-    }
-
-    @Test
-    public void isXpathCssTest() {
-        AbstractPage page = new AbstractPage();
-        assertThat("Specified locator classified wrong.", page.isXpath("div.class"), equalTo(false));
-    }
-
-    @Test
     public void locateAllByXpathTest() throws Exception {
         String locatorValue = "//xpath";
         when(UnifiedDataProviderUtil.class, "getLocatorByKey", anyObject(), anyObject()).thenReturn(locatorValue);

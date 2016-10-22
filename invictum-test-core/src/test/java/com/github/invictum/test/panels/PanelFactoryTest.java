@@ -1,24 +1,20 @@
 package com.github.invictum.test.panels;
 
+import com.github.invictum.locator.factory.LocatorFactory;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.PanelFactory;
-import com.github.invictum.panels.strategy.NoWaitStrategy;
-import com.github.invictum.test.panels.instances.PanelWithDisabledStrategy;
 import com.github.invictum.test.panels.instances.TestFloatingPanel;
 import com.github.invictum.test.panels.instances.TestLocalStrategyPanel;
 import com.github.invictum.test.panels.instances.TestPanel;
 import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,7 +24,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({UnifiedDataProviderFactory.class})
+@PrepareForTest({UnifiedDataProviderFactory.class, LocatorFactory.class})
 public class PanelFactoryTest {
 
     private AbstractPage pageMock = null;
@@ -41,7 +37,6 @@ public class PanelFactoryTest {
         dataProvider.setBase("//div");
         when(UnifiedDataProviderFactory.class, "getInstance", anyObject()).thenReturn(dataProvider);
         pageMock = mock(AbstractPage.class);
-        when(pageMock.isXpath("//div")).thenReturn(true);
         when(pageMock.getDriver()).thenReturn(null);
     }
 
@@ -58,15 +53,16 @@ public class PanelFactoryTest {
     }
 
     @Test
-    public void getViaCssTest() {
-        when(pageMock.isXpath("//div")).thenReturn(false);
+    public void getViaCssTest() throws Exception {
+        mockStatic(LocatorFactory.class);
+        when(LocatorFactory.class, "isXpath", "//div").thenReturn(false);
         PanelFactory.get(TestPanel.class, pageMock);
         verify(pageMock, times(1)).find(By.cssSelector("//div"));
     }
 
     @Test
     public void getAllViaCssTest() {
-        when(pageMock.isXpath("//div")).thenReturn(false);
+        mockStatic(LocatorFactory.class);
         PanelFactory.getAll(TestPanel.class, pageMock);
         verify(pageMock, times(1)).findAll(By.cssSelector("//div"));
     }
@@ -98,7 +94,7 @@ public class PanelFactoryTest {
     @Test
     public void getFloatingNoBaseTest() {
         dataProvider.setBase(null);
-        when(pageMock.isXpath(anyString())).thenCallRealMethod();
+        //        when(pageMock.isXpath(anyString())).thenCallRealMethod();
         PanelFactory.get(TestFloatingPanel.class, pageMock);
         verify(pageMock, times(1)).find(By.xpath(PanelFactory.FLOATING_PANEL_BASE_LOCATOR));
     }
