@@ -110,8 +110,7 @@ public class AbstractPage extends PageObject {
      * @return locator By
      */
     protected By locator(final String locatorKey) {
-        String locatorValue = locatorValue(locatorKey);
-        return LocatorFactory.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+        return LocatorFactory.build(locatorValue(locatorKey));
     }
 
     /**

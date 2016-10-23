@@ -1,6 +1,7 @@
 package com.github.invictum.test.locator.factory;
 
 import com.github.invictum.locator.factory.LocatorFactory;
+import net.serenitybdd.core.annotations.findby.By;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,5 +30,36 @@ public class LocatorFactoryTest {
     @Test
     public void isXpathCssTest() {
         assertThat("Specified locator classified wrong.", LocatorFactory.isXpath("div.class"), equalTo(false));
+    }
+
+    @Test
+    public void buildXpathTest() {
+        assertThat("Xpath locator was built wrong.", LocatorFactory.build("//div"), equalTo(By.xpath("//div")));
+    }
+
+    @Test
+    public void buildCssTest() {
+        assertThat("Css locator was built wrong.", LocatorFactory.build("div.class"),
+                equalTo(By.cssSelector("div.class")));
+    }
+
+    @Test
+    public void buildParametrizedTest() {
+        assertThat("Parametrized locator was built wrong.",
+                LocatorFactory.build("//div[@id = 'test-{2}-{1}']", "one", "two"),
+                equalTo(By.xpath("//div[@id = 'test-two-one']")));
+    }
+
+    @Test
+    public void buildParametrizedBoundsTest() {
+        assertThat("Parametrized locator was built wrong.", LocatorFactory.build("{1}#temp-{2}", "div", "id"),
+                equalTo(By.cssSelector("div#temp-id")));
+    }
+
+    @Test
+    public void nonParametrizedTemplateTest() {
+        assertThat("Parametrized locator was built wrong.",
+                LocatorFactory.build("//div[@id = 'test-one-two']", "one", "two"),
+                equalTo(By.xpath("//div[@id = 'test-one-two']")));
     }
 }

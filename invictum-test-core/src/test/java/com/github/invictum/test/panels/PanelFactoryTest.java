@@ -94,7 +94,6 @@ public class PanelFactoryTest {
     @Test
     public void getFloatingNoBaseTest() {
         dataProvider.setBase(null);
-        //        when(pageMock.isXpath(anyString())).thenCallRealMethod();
         PanelFactory.get(TestFloatingPanel.class, pageMock);
         verify(pageMock, times(1)).find(By.xpath(PanelFactory.FLOATING_PANEL_BASE_LOCATOR));
     }

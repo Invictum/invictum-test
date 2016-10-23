@@ -77,8 +77,7 @@ public class AbstractPanel {
     }
 
     protected By locator(final String locatorKey) {
-        String locatorValue = locatorValue(locatorKey);
-        return LocatorFactory.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+        return LocatorFactory.build(locatorValue(locatorKey));
     }
 
     public WebElementFacade locate(final String locatorKey) {
