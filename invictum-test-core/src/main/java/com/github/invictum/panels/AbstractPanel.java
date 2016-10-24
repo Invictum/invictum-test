@@ -76,16 +76,16 @@ public class AbstractPanel {
         return LocatorFactory.isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
     }
 
-    protected By locator(final String locatorKey) {
-        return LocatorFactory.build(locatorValue(locatorKey));
+    protected By locator(final String locatorKey, final String... parameters) {
+        return LocatorFactory.build(locatorValue(locatorKey), parameters);
     }
 
-    public WebElementFacade locate(final String locatorKey) {
-        return findBy(locator(locatorKey));
+    public WebElementFacade locate(final String locatorKey, final String... parameters) {
+        return findBy(locator(locatorKey, parameters));
     }
 
-    public List<WebElementFacade> locateAll(final String locatorKey) {
-        return findAll(locator(locatorKey));
+    public List<WebElementFacade> locateAll(final String locatorKey, final String... parameters) {
+        return findAll(locator(locatorKey, parameters));
     }
 
     protected String data(final String dataKey) {

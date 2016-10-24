@@ -107,10 +107,11 @@ public class AbstractPage extends PageObject {
      * Method returns wrapped By locator related to current page.
      *
      * @param locatorKey String
+     * @param parameters String[]
      * @return locator By
      */
-    protected By locator(final String locatorKey) {
-        return LocatorFactory.build(locatorValue(locatorKey));
+    protected By locator(final String locatorKey, final String... parameters) {
+        return LocatorFactory.build(locatorValue(locatorKey), parameters);
     }
 
     /**
@@ -127,20 +128,22 @@ public class AbstractPage extends PageObject {
      * Initializes WebElement by it locator key in context of current page.
      *
      * @param locatorKey String
+     * @param parameters String[]
      * @return WebElementFacade
      */
-    public WebElementFacade locate(final String locatorKey) {
-        return find(locator(locatorKey));
+    public WebElementFacade locate(final String locatorKey, final String... parameters) {
+        return find(locator(locatorKey, parameters));
     }
 
     /**
      * Initializes WebElements by its locator keys in context of current page.
      *
      * @param locatorKey String
+     * @param parameters String[]
      * @return List WebElementFacade
      */
-    public List<WebElementFacade> locateAll(final String locatorKey) {
-        return findAll(locator(locatorKey));
+    public List<WebElementFacade> locateAll(final String locatorKey, final String... parameters) {
+        return findAll(locator(locatorKey, parameters));
     }
 
     @Override
