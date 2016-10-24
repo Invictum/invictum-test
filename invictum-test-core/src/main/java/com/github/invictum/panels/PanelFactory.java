@@ -1,5 +1,6 @@
 package com.github.invictum.panels;
 
+import com.github.invictum.locator.factory.LocatorFactory;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.panels.init.PanelInitUtil;
 import com.github.invictum.tricks.Visibility;
@@ -52,7 +53,7 @@ public class PanelFactory {
             locator = FLOATING_PANEL_BASE_LOCATOR;
         }
         verifyBaseAttribute(panelClass, locator);
-        WebElementFacade panel = parentPage.isXpath(locator) ? parentPage.find(By.xpath(locator)) : parentPage
+        WebElementFacade panel = LocatorFactory.isXpath(locator) ? parentPage.find(By.xpath(locator)) : parentPage
                 .find(By.cssSelector(locator));
         /** Wrap panel element into panel class. */
         panelInstance.initWith(parentPage, panel);
@@ -69,7 +70,7 @@ public class PanelFactory {
      */
     public static boolean isPanelVisible(Class<? extends AbstractPanel> panelClass, AbstractPage parentPage) {
         String locatorValue = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
-        By locator = parentPage.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+        By locator = LocatorFactory.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
         return parentPage.getTrick(Visibility.class).isElementVisible(locator);
     }
 
@@ -82,8 +83,8 @@ public class PanelFactory {
                     String.format("Try to init a list of Floating Panels for %s", panelClass.getSimpleName()));
         }
         verifyBaseAttribute(panelClass, locator);
-        List<WebElementFacade> panels = parentPage.isXpath(locator) ? parentPage.findAll(By.xpath(locator)) : parentPage
-                .findAll(By.cssSelector(locator));
+        List<WebElementFacade> panels = LocatorFactory.isXpath(locator) ? parentPage
+                .findAll(By.xpath(locator)) : parentPage.findAll(By.cssSelector(locator));
         /** Wrap panel elements into list of panel classes. */
         List<T> panelList = new ArrayList<>();
         for (WebElementFacade element : panels) {

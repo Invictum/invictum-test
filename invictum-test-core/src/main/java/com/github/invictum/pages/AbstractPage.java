@@ -1,5 +1,6 @@
 package com.github.invictum.pages;
 
+import com.github.invictum.locator.factory.LocatorFactory;
 import com.github.invictum.panels.AbstractPanel;
 import com.github.invictum.panels.PanelFactory;
 import com.github.invictum.tricks.core.AbstractTrick;
@@ -39,16 +40,6 @@ public class AbstractPage extends PageObject {
         pageUrls = new EnhancedPageUrls(this);
         setPageUrls(pageUrls);
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
-    }
-
-    /**
-     * Method checks locator relation to xpath or css.
-     *
-     * @param locator String
-     * @return boolean result
-     */
-    public boolean isXpath(String locator) {
-        return locator.matches("^(html/|(.|)/).+$");
     }
 
     @Override
@@ -119,8 +110,7 @@ public class AbstractPage extends PageObject {
      * @return locator By
      */
     protected By locator(final String locatorKey) {
-        String locatorValue = locatorValue(locatorKey);
-        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+        return LocatorFactory.build(locatorValue(locatorKey));
     }
 
     /**

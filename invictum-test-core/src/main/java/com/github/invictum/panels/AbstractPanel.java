@@ -1,5 +1,6 @@
 package com.github.invictum.panels;
 
+import com.github.invictum.locator.factory.LocatorFactory;
 import com.github.invictum.pages.AbstractPage;
 import com.github.invictum.tricks.core.AbstractTrick;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
@@ -38,10 +39,6 @@ public class AbstractPanel {
         return parentPage.getTrick(trickClass);
     }
 
-    protected boolean isXpath(String locator) {
-        return parentPage.isXpath(locator);
-    }
-
     public WebElementFacade findBy(final String elementLocator) {
         return panel.findBy(elementLocator);
     }
@@ -76,12 +73,11 @@ public class AbstractPanel {
 
     protected String locatorValue(final String locatorKey) {
         String locator = UnifiedDataProviderUtil.getLocatorByKey(locatorKey, dataProvider);
-        return isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
+        return LocatorFactory.isXpath(locator) ? PANEL_LOCATOR_PREFIX + locator : locator;
     }
 
     protected By locator(final String locatorKey) {
-        String locatorValue = locatorValue(locatorKey);
-        return isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
+        return LocatorFactory.build(locatorValue(locatorKey));
     }
 
     public WebElementFacade locate(final String locatorKey) {
