@@ -77,6 +77,7 @@ public class AbstractPanel {
     }
 
     protected By locator(final String locatorKey, final String... parameters) {
+        parentPage.addJQuerySupport();
         return LocatorFactory.build(locatorValue(locatorKey), parameters);
     }
 

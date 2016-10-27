@@ -111,6 +111,7 @@ public class AbstractPage extends PageObject {
      * @return locator By
      */
     protected By locator(final String locatorKey, final String... parameters) {
+        addJQuerySupport();
         return LocatorFactory.build(locatorValue(locatorKey), parameters);
     }
 

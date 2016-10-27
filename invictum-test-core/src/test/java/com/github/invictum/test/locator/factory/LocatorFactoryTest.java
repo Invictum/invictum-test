@@ -44,6 +44,13 @@ public class LocatorFactoryTest {
     }
 
     @Test
+    public void buildJqueryTest() {
+        org.openqa.selenium.By expected = By.jquery(".class:visible");
+        assertThat("jQuery locator was built wrong.", LocatorFactory.build("jquery = .class:visible"),
+                equalTo(expected));
+    }
+
+    @Test
     public void buildParametrizedTest() {
         assertThat("Parametrized locator was built wrong.",
                 LocatorFactory.build("//div[@id = 'test-{2}-{1}']", "one", "two"),

@@ -53,21 +53,6 @@ public class PanelFactoryTest {
     }
 
     @Test
-    public void getViaCssTest() throws Exception {
-        mockStatic(LocatorFactory.class);
-        when(LocatorFactory.class, "isXpath", "//div").thenReturn(false);
-        PanelFactory.get(TestPanel.class, pageMock);
-        verify(pageMock, times(1)).find(By.cssSelector("//div"));
-    }
-
-    @Test
-    public void getAllViaCssTest() {
-        mockStatic(LocatorFactory.class);
-        PanelFactory.getAll(TestPanel.class, pageMock);
-        verify(pageMock, times(1)).findAll(By.cssSelector("//div"));
-    }
-
-    @Test
     public void localStrategyTest() {
         PanelFactory.get(TestLocalStrategyPanel.class, pageMock);
         verify(pageMock, times(1)).resetImplicitTimeout();

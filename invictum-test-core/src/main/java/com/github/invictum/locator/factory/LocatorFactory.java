@@ -1,12 +1,16 @@
 package com.github.invictum.locator.factory;
 
+import com.github.invictum.locator.factory.providers.LocatorProvider;
 import net.serenitybdd.core.annotations.findby.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ServiceLoader;
+
 public class LocatorFactory {
 
     private final static Logger LOG = LoggerFactory.getLogger(LocatorFactory.class);
+    private static ServiceLoader<LocatorProvider> providers = ServiceLoader.load(LocatorProvider.class);
 
     private LocatorFactory() {
         //disable constructor.
@@ -36,6 +40,11 @@ public class LocatorFactory {
         String locatorCandidate = locatorString;
         if (parameters.length > 0) {
             locatorCandidate = constructParametrized(locatorCandidate, parameters);
+        }
+        for (LocatorProvider provider : providers) {
+            if (provider.isAcceptableTo(locatorCandidate)) {
+                return provider.wrap(locatorCandidate);
+            }
         }
         return isXpath(locatorCandidate) ? By.xpath(locatorCandidate) : By.cssSelector(locatorCandidate);
     }
