@@ -16,6 +16,8 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 
+import static net.serenitybdd.core.annotations.findby.By.ByjQuerySelector;
+
 public class AbstractPage extends PageObject {
 
     private UnifiedDataProvider dataProvider;
@@ -40,6 +42,14 @@ public class AbstractPage extends PageObject {
         pageUrls = new EnhancedPageUrls(this);
         setPageUrls(pageUrls);
         dataProvider = UnifiedDataProviderFactory.getInstance(this);
+    }
+
+    public boolean activateIfJQueryRelated(By locator) {
+        if (locator instanceof ByjQuerySelector) {
+            addJQuerySupport();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -132,7 +142,9 @@ public class AbstractPage extends PageObject {
      * @return WebElementFacade
      */
     public WebElementFacade locate(final String locatorKey, final String... parameters) {
-        return find(locator(locatorKey, parameters));
+        By locator = locator(locatorKey, parameters);
+        activateIfJQueryRelated(locator);
+        return find(locator);
     }
 
     /**
@@ -143,7 +155,9 @@ public class AbstractPage extends PageObject {
      * @return List WebElementFacade
      */
     public List<WebElementFacade> locateAll(final String locatorKey, final String... parameters) {
-        return findAll(locator(locatorKey, parameters));
+        By locator = locator(locatorKey, parameters);
+        activateIfJQueryRelated(locator);
+        return findAll(locator);
     }
 
     @Override

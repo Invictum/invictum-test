@@ -53,8 +53,9 @@ public class PanelFactory {
             locator = FLOATING_PANEL_BASE_LOCATOR;
         }
         verifyBaseAttribute(panelClass, locator);
-        WebElementFacade panel = LocatorFactory.isXpath(locator) ? parentPage.find(By.xpath(locator)) : parentPage
-                .find(By.cssSelector(locator));
+        By panelLocator = LocatorFactory.build(locator);
+        parentPage.activateIfJQueryRelated(panelLocator);
+        WebElementFacade panel = parentPage.find(panelLocator);
         /** Wrap panel element into panel class. */
         panelInstance.initWith(parentPage, panel);
         PanelInitUtil.invokeWhenInitializedMethods(panelInstance);
@@ -70,8 +71,9 @@ public class PanelFactory {
      */
     public static boolean isPanelVisible(Class<? extends AbstractPanel> panelClass, AbstractPage parentPage) {
         String locatorValue = UnifiedDataProviderFactory.getInstance(getPanel(panelClass)).getBase();
-        By locator = LocatorFactory.isXpath(locatorValue) ? By.xpath(locatorValue) : By.cssSelector(locatorValue);
-        return parentPage.getTrick(Visibility.class).isElementVisible(locator);
+        By panelLocator = LocatorFactory.build(locatorValue);
+        parentPage.activateIfJQueryRelated(panelLocator);
+        return parentPage.getTrick(Visibility.class).isElementVisible(panelLocator);
     }
 
     public static <T extends AbstractPanel> List<T> getAll(final Class<T> panelClass, final AbstractPage parentPage) {
@@ -83,8 +85,9 @@ public class PanelFactory {
                     String.format("Try to init a list of Floating Panels for %s", panelClass.getSimpleName()));
         }
         verifyBaseAttribute(panelClass, locator);
-        List<WebElementFacade> panels = LocatorFactory.isXpath(locator) ? parentPage
-                .findAll(By.xpath(locator)) : parentPage.findAll(By.cssSelector(locator));
+        By panelLocator = LocatorFactory.build(locator);
+        parentPage.activateIfJQueryRelated(panelLocator);
+        List<WebElementFacade> panels = parentPage.findAll(panelLocator);
         /** Wrap panel elements into list of panel classes. */
         List<T> panelList = new ArrayList<>();
         for (WebElementFacade element : panels) {

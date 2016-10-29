@@ -81,11 +81,13 @@ public class AbstractPanel {
     }
 
     public WebElementFacade locate(final String locatorKey, final String... parameters) {
-        return findBy(locator(locatorKey, parameters));
+        By locator = locator(locatorKey, parameters);
+        return parentPage.activateIfJQueryRelated(locator) ? parentPage.find(locator) : findBy(locator);
     }
 
     public List<WebElementFacade> locateAll(final String locatorKey, final String... parameters) {
-        return findAll(locator(locatorKey, parameters));
+        By locator = locator(locatorKey, parameters);
+        return parentPage.activateIfJQueryRelated(locator) ? parentPage.findAll(locator) : findAll(locator);
     }
 
     protected String data(final String dataKey) {
