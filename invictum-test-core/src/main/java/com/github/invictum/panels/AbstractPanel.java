@@ -14,8 +14,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
-import static net.serenitybdd.core.annotations.findby.By.ByjQuerySelector;
-
 public class AbstractPanel {
 
     private static final String PANEL_LOCATOR_PREFIX = ".";
@@ -79,18 +77,17 @@ public class AbstractPanel {
     }
 
     protected By locator(final String locatorKey, final String... parameters) {
-        parentPage.addJQuerySupport();
         return LocatorFactory.build(locatorValue(locatorKey), parameters);
     }
 
     public WebElementFacade locate(final String locatorKey, final String... parameters) {
         By locator = locator(locatorKey, parameters);
-        return (locator instanceof ByjQuerySelector) ? parentPage.find(locator) : findBy(locator);
+        return parentPage.activateIfJQueryRelated(locator) ? parentPage.find(locator) : findBy(locator);
     }
 
     public List<WebElementFacade> locateAll(final String locatorKey, final String... parameters) {
         By locator = locator(locatorKey, parameters);
-        return (locator instanceof ByjQuerySelector) ? parentPage.findAll(locator) : findAll(locator);
+        return parentPage.activateIfJQueryRelated(locator) ? parentPage.findAll(locator) : findAll(locator);
     }
 
     protected String data(final String dataKey) {

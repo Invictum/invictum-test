@@ -57,6 +57,7 @@ public class AbstractPanelTest {
     @Test
     public void locateJqueryTest() {
         AbstractPanel panel = new AbstractPanel();
+        when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);
         panel.initWith(pageMock, panelMock);
         panel.locate("jquery");
         verify(pageMock, times(1)).find(By.jquery("div.class:visible"));
@@ -73,6 +74,7 @@ public class AbstractPanelTest {
     @Test
     public void locateAllJqueryTest() {
         AbstractPanel panel = new AbstractPanel();
+        when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);
         panel.initWith(pageMock, panelMock);
         panel.locateAll("jquery");
         verify(pageMock, times(1)).findAll(By.jquery("div.class:visible"));
