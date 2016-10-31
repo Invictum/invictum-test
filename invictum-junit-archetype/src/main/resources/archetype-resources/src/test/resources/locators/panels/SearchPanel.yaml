@@ -1,5 +1,0 @@
-name: Search Panel
-base: //div[@id='simpleSearch']
-locators:
-    search.input: //input[@id='searchInput']
-    search.button: //input[@id='searchButton']
