@@ -2,4 +2,4 @@ name: Article Page markup
 urls:
     default: /wiki/{1}
 locators:
-    title: //h1[@class = 'firstHeading']
+    title: "//h1[@class = 'firstHeading']"
