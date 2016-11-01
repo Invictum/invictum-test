@@ -2,6 +2,7 @@ package com.github.invictum.test.fixtures;
 
 import com.github.invictum.fixtures.FixtureProcessor;
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,11 @@ public class FixtureProcessorTest {
         when(PropertiesUtil.getProperty(FixturesPackageName)).thenReturn("com.github.invictum.test.fixtures");
     }
 
+    @After
+    public void afterTest() {
+        FixtureProcessor.getRegisteredFixtures().clear();
+    }
+
     @Test
     public void prepareFixtureTest() throws Exception {
         whenNew(ExampleFixture.class).withNoArguments().thenReturn(fixtureMock);
@@ -42,7 +48,17 @@ public class FixtureProcessorTest {
     }
 
     @Test
+    public void putFixtureTest() throws Exception {
+        whenNew(ExampleFixture.class).withNoArguments().thenReturn(fixtureMock);
+        FixtureProcessor.put(ExampleFixture.class);
+        verifyNew(ExampleFixture.class, Mockito.times(1));
+        assertThat("Fixture doesn't put.", FixtureProcessor.getRegisteredFixtures().size(), equalTo(1));
+    }
+
+    @Test
     public void rollbackFixtureTest() throws Exception {
+        whenNew(ExampleFixture.class).withNoArguments().thenReturn(fixtureMock);
+        FixtureProcessor.put(ExampleFixture.class);
         FixtureProcessor.rollback();
         assertThat("Fixture isn't rollback.", FixtureProcessor.getRegisteredFixtures().size(), equalTo(0));
     }

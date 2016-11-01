@@ -1,6 +1,9 @@
 package com.github.invictum;
 
 import com.github.invictum.data.injector.DataInjector;
+import com.github.invictum.fixture.Fixture;
+import com.github.invictum.fixture.Fixtures;
+import com.github.invictum.fixtures.FixtureProcessor;
 import com.github.invictum.url.Url;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -58,7 +61,27 @@ public class EnhancedSerenityRunner extends SerenityRunner {
     protected Statement methodInvoker(FrameworkMethod method, Object test) {
         DataInjector.injectInto(test);
         overrideUrls(method);
-        return super.methodInvoker(method, test);
+        applyFixtures(method);
+        Statement statement = super.methodInvoker(method, test);
+        rollbackFixture();
+        return statement;
+    }
+
+    private void applyFixtures(FrameworkMethod method) {
+        Fixtures fixtures = method.getAnnotation(Fixtures.class);
+        if (fixtures != null) {
+            for (Fixture fixture : fixtures.value()) {
+                FixtureProcessor.put(fixture.value(), fixture.parameters());
+            }
+        }
+        Fixture fixture = method.getAnnotation(Fixture.class);
+        if (fixture != null) {
+            FixtureProcessor.put(fixture.value(), fixture.parameters());
+        }
+    }
+
+    private void rollbackFixture() {
+        FixtureProcessor.rollback();
     }
 
     private void overrideUrls(FrameworkMethod method) {
