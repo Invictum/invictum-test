@@ -3,6 +3,7 @@ package com.github.invictum;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.config.RestAssuredConfig;
+import com.jayway.restassured.config.SSLConfig;
 import com.jayway.restassured.config.SessionConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -56,9 +57,9 @@ public class ImpexImporter {
     }
 
     private static void buildBaseRequest(String sessionKey, String uri) {
-        request = new RequestSpecBuilder()
-                .setConfig(RestAssuredConfig.newConfig().sessionConfig(new SessionConfig().sessionIdName(sessionKey)))
-                .setBaseUri(uri).build();
+        request = new RequestSpecBuilder().setConfig(
+                RestAssuredConfig.newConfig().sessionConfig(new SessionConfig().sessionIdName(sessionKey))
+                        .sslConfig(new SSLConfig().relaxedHTTPSValidation())).setBaseUri(uri).build();
     }
 
     private static void makeAuthorizationRequest() {
