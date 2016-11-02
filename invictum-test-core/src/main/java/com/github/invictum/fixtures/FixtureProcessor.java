@@ -41,18 +41,14 @@ public class FixtureProcessor {
         for (Class<? extends Fixture> fixtureClass : availableFixtureClasses) {
             for (Map.Entry<String, String> annotation : annotations.entrySet()) {
                 if (annotation.getKey().equalsIgnoreCase(fixtureClass.getSimpleName())) {
-                    try {
-                        Fixture fixture = fixtureClass.newInstance();
-                        fixture.setParams(prepareParams(annotation.getValue()));
-                        LOG.info("Applying {} fixture", fixture);
-                        fixture.prepareCondition();
-                        registeredFixtures.get().add(fixture);
-                    } catch (ReflectiveOperationException e) {
-                        LOG.error("Failed to apply {} fixture", fixtureClass);
-                    }
+                    applyFixture(fixtureClass, prepareParams(annotation.getValue()));
                 }
             }
         }
+    }
+
+    public static void put(Class<? extends Fixture> fixtureClass, String... arguments) {
+        applyFixture(fixtureClass, arguments);
     }
 
     public static void rollback() {
@@ -65,6 +61,18 @@ public class FixtureProcessor {
 
     public static Queue<Fixture> getRegisteredFixtures() {
         return registeredFixtures.get();
+    }
+
+    private static void applyFixture(Class<? extends Fixture> fixtureClass, String... arguments) {
+        try {
+            Fixture fixture = fixtureClass.newInstance();
+            fixture.setParams(arguments);
+            LOG.info("Applying {} fixture", fixture);
+            fixture.prepareCondition();
+            registeredFixtures.get().add(fixture);
+        } catch (ReflectiveOperationException e) {
+            LOG.error("Failed to apply {} fixture", fixtureClass);
+        }
     }
 
     private static String[] prepareParams(String paramsString) {

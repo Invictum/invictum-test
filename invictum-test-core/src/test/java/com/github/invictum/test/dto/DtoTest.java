@@ -105,4 +105,14 @@ public class DtoTest {
         assertThat("Objects hash is wrong.", sut.hashCode(), equalTo(-891793549));
     }
 
+    @Test
+    public void fromFileTest() {
+        ExampleDto expected = new ExampleDto();
+        expected.setBoolValue(false);
+        expected.setEnumValue(EnumAttribute.ALPHA);
+        expected.setIntValue(42);
+        expected.setTextValue("text");
+        sut.fromFile("data/example-dto.yml");
+        assertThat("Dto constructed wrong.", sut, equalTo(expected));
+    }
 }

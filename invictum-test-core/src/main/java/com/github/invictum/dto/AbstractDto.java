@@ -2,12 +2,15 @@ package com.github.invictum.dto;
 
 import com.github.invictum.dto.annotation.DtoAttribute;
 import com.github.invictum.dto.annotation.KeyAttribute;
+import com.github.invictum.utils.ResourceProvider;
 import com.github.invictum.utils.properties.EnhancedSystemProperty;
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -47,6 +50,32 @@ public class AbstractDto {
     @Override
     public int hashCode() {
         return getData(this, true).hashCode();
+    }
+
+    public void fromFile(String resourcePath, boolean useVelocity) {
+        String content = ResourceProvider.getFileContent(resourcePath, useVelocity);
+        Yaml yaml = new Yaml(new Constructor(this.getClass()));
+        setContent(yaml.load(content));
+    }
+
+    public void fromFile(String resourcePath) {
+        fromFile(resourcePath, false);
+    }
+
+    private void setContent(Object data) {
+        for (Field from : data.getClass().getDeclaredFields()) {
+            for (Field to : this.getClass().getDeclaredFields()) {
+                if (to.equals(from)) {
+                    try {
+                        to.setAccessible(true);
+                        from.setAccessible(true);
+                        to.set(this, from.get(data));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     private String extractData(Object object, Field attribute) {

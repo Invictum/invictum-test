@@ -1,5 +1,6 @@
 package com.github.invictum.utils;
 
+import com.github.invictum.velocity.VelocityProcessor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -45,5 +47,24 @@ public class ResourceProvider {
         }
         LOG.debug("Package with path {} was found", packageName);
         return true;
+    }
+
+    public static String getFileContent(String resourcePath, boolean velocity) {
+        LOG.debug("Try to load '{}' resource", resourcePath);
+        URL file = Thread.currentThread().getContextClassLoader().getResource(resourcePath);
+        if (file == null) {
+            throw new IllegalStateException(String.format("Undiscovered resource for %s", resourcePath));
+        }
+        File resourceFile = new File(file.getFile());
+        try {
+            String content = FileUtils.readFileToString(resourceFile);
+            if (velocity) {
+                LOG.debug("Velocity is enabled, processing loaded YML file.");
+                return VelocityProcessor.processContent(content);
+            }
+            return content;
+        } catch (IOException e) {
+            throw new IllegalStateException(String.format("Failed to read %s file", resourceFile.getPath()));
+        }
     }
 }

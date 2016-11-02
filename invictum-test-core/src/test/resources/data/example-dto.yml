@@ -1,0 +1,4 @@
+textValue: "text"
+boolValue: false
+intValue: 42
+enumValue: "ALPHA"
