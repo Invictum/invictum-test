@@ -23,6 +23,11 @@ public class LocatorFactoryTest {
     }
 
     @Test
+    public void isXpathQualifiedTest() {
+        assertThat("Specified locator classified wrong.", LocatorFactory.isXpath("./div[@class]"), equalTo(true));
+    }
+
+    @Test
     public void isXpathFullDescribedTest() {
         assertThat("Specified locator classified wrong.", LocatorFactory.isXpath("html/div[@id]"), equalTo(true));
     }

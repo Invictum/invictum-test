@@ -33,7 +33,7 @@ public class LocatorFactory {
     }
 
     public static boolean isXpath(String xpathCandidate) {
-        return xpathCandidate.matches("^(html/|(.|)/).+$");
+        return xpathCandidate.matches("^(html/|(\\.|)/).+$");
     }
 
     public static org.openqa.selenium.By build(String locatorString, String... parameters) {
