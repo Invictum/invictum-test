@@ -14,14 +14,38 @@ import java.util.concurrent.TimeUnit;
  */
 public class SafePicker extends AbstractTrick {
 
+    private String defaultValue = null;
+    private int waitTimeout = 100;
+    private WebElementFacade searchContext = null;
+
     private final static Logger LOG = LoggerFactory.getLogger(SafePicker.class);
 
-    public String pick(By locator, String defaultValue, int waitTimeout) {
+    public SafePicker withDefaultValue(String value) {
+        defaultValue = value;
+        return this;
+    }
+
+    public SafePicker withTimeout(int timeout) {
+        waitTimeout = timeout;
+        return this;
+    }
+
+    public SafePicker onElement(WebElementFacade element) {
+        searchContext = element;
+        return this;
+    }
+
+    public SafePicker onPage() {
+        searchContext = null;
+        return this;
+    }
+
+    public String pick(By locator) {
         LOG.debug("Safe pick for {} with {} default value", locator, defaultValue);
         String resultValue = defaultValue;
         context().setImplicitTimeout(waitTimeout, TimeUnit.MILLISECONDS);
         try {
-            WebElementFacade element = context().find(locator);
+            WebElementFacade element = (searchContext == null) ? context().find(locator) : searchContext.find(locator);
             resultValue = element.getText();
             LOG.debug("Element located. Extracted text value: {}", resultValue);
         } catch (RuntimeException e) {
@@ -31,11 +55,4 @@ public class SafePicker extends AbstractTrick {
         return resultValue;
     }
 
-    public String pick(By locator, String defaultValue) {
-        return pick(locator, defaultValue, 100);
-    }
-
-    public String pick(By locator) {
-        return pick(locator, null, 100);
-    }
 }
