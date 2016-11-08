@@ -13,13 +13,6 @@
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Used as a base for automation. Based on Serenity BDD project.</description>
 
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
     <dependencies>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
