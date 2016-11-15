@@ -40,6 +40,22 @@ public class SafePickerTest {
     }
 
     @Test
+    public void pickOnElementTest() {
+        WebElementFacadeImpl parentWebElementMock = mock(WebElementFacadeImpl.class);
+        when(parentWebElementMock.find(xpathLocator)).thenReturn(webElementMock);
+        when(webElementMock.getText()).thenReturn("test");
+        when(pageMock.find(xpathLocator)).thenReturn(webElementMock);
+        assertThat("Pick result is wrong.", sud.onElement(parentWebElementMock).pick(xpathLocator), equalTo("test"));
+    }
+
+    @Test
+    public void pickOnPageTest() {
+        when(webElementMock.getText()).thenReturn("test");
+        when(pageMock.find(xpathLocator)).thenReturn(webElementMock);
+        assertThat("Pick result is wrong.", sud.onElement(webElementMock).onPage().pick(xpathLocator), equalTo("test"));
+    }
+
+    @Test
     public void nullDefaultValuePickTest() {
         when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
         assertThat("Pick result isn't null.", sud.pick(cssLocator), equalTo(null));
@@ -48,13 +64,14 @@ public class SafePickerTest {
     @Test
     public void customDefaultValuePickTest() {
         when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
-        assertThat("Custom pick result is wrong.", sud.pick(cssLocator, "default"), equalTo("default"));
+        assertThat("Custom pick result is wrong.", sud.withDefaultValue("default").pick(cssLocator),
+                equalTo("default"));
     }
 
     @Test
     public void defaultTimeoutValuePickTest() {
         when(pageMock.find(xpathLocator)).thenThrow(new RuntimeException());
-        sud.pick(xpathLocator, "default");
+        sud.pick(xpathLocator);
         verify(pageMock, times(1)).setImplicitTimeout(100, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
@@ -62,7 +79,7 @@ public class SafePickerTest {
     @Test
     public void customTimeoutValuePickTest() {
         when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
-        sud.pick(cssLocator, "default", 200);
+        sud.withTimeout(200).pick(cssLocator);
         verify(pageMock, times(1)).setImplicitTimeout(200, TimeUnit.MILLISECONDS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
