@@ -1,0 +1,8 @@
+com.github.invictum.dto.attribute.converter.converters.NullConverter
+com.github.invictum.dto.attribute.converter.converters.StringConverter
+com.github.invictum.dto.attribute.converter.converters.IntegerConverter
+com.github.invictum.dto.attribute.converter.converters.BooleanConverter
+com.github.invictum.dto.attribute.converter.converters.FloatConverter
+com.github.invictum.dto.attribute.converter.converters.DoubleConverter
+com.github.invictum.dto.attribute.converter.converters.EnumConverter
+com.github.invictum.dto.attribute.converter.converters.DtoConverter
