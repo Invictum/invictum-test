@@ -55,6 +55,13 @@ public class AllureStepListener implements StepListener {
     }
 
     @Override
+    public void testStarted(String description, String id) {
+        TestCaseStartedEvent testCaseStartedEvent = new TestCaseStartedEvent(suitUid,
+                String.format("%s - %s", id, description));
+        allure.fire(AnnotationManager.withExecutorInfo(testCaseStartedEvent));
+    }
+
+    @Override
     public void testFinished(TestOutcome result) {
         if (result.getFailingStep().isPresent()) {
             TestCaseFailureEvent event = new TestCaseFailureEvent();
