@@ -56,7 +56,7 @@
             <plugin>
                 <groupId>net.serenity-bdd.maven.plugins</groupId>
                 <artifactId>serenity-maven-plugin</artifactId>
-                <version>1.1.39</version>
+                <version>1.2.2</version>
                 <executions>
                     <execution>
                         <id>serenity-reports</id>
