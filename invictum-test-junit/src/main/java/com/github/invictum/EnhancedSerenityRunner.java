@@ -63,8 +63,7 @@ public class EnhancedSerenityRunner extends SerenityRunner {
         overrideUrls(method);
         applyFixtures(method);
         Statement statement = super.methodInvoker(method, test);
-        rollbackFixture();
-        return statement;
+        return new InvictumStatement(statement);
     }
 
     private void applyFixtures(FrameworkMethod method) {
@@ -78,10 +77,6 @@ public class EnhancedSerenityRunner extends SerenityRunner {
         if (fixture != null) {
             FixtureProcessor.put(fixture.value(), fixture.parameters());
         }
-    }
-
-    private void rollbackFixture() {
-        FixtureProcessor.rollback();
     }
 
     private void overrideUrls(FrameworkMethod method) {
