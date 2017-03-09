@@ -16,6 +16,8 @@ import ru.yandex.qatools.allure.utils.AnnotationManager;
 import java.util.Map;
 import java.util.UUID;
 
+import static ru.yandex.qatools.allure.config.AllureModelUtils.*;
+
 public class AllureStepListener implements StepListener {
 
     private Allure allure = Allure.LIFECYCLE;
@@ -35,12 +37,18 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testSuiteStarted(Class<?> storyClass) {
-        allure.fire(new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName()));
+        TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName());
+        event.withLabels(createProgrammingLanguageLabel(), createTestFrameworkLabel("jUnit"), createTestClassLabel(storyClass
+                .getSimpleName()));
+        allure.fire(event);
     }
 
     @Override
     public void testSuiteStarted(Story story) {
-        allure.fire(new TestSuiteStartedEvent(getSuitUid(), story.getStoryName()));
+        TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), story.getStoryName());
+        event.withLabels(createProgrammingLanguageLabel(), createTestFrameworkLabel("BDD"), createStoryLabel(story
+                .getName()), createFeatureLabel(story.getName()));
+        allure.fire(event);
     }
 
     @Override
@@ -128,6 +136,7 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testFailed(TestOutcome testOutcome, Throwable cause) {
+        //Used only in jUnit style tests.
         allure.fire(new TestCaseFailureEvent().withThrowable(cause));
     }
 
