@@ -103,7 +103,8 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void stepIgnored() {
-        //TODO: Investigate how to integrate it.
+        allure.fire(new StepCanceledEvent());
+        allure.fire(new StepFinishedEvent());
     }
 
     @Override
@@ -133,7 +134,7 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testIgnored() {
-        allure.fire(new TestCasePendingEvent());
+        allure.fire(new TestCaseCanceledEvent());
         allure.fire(new TestCaseFinishedEvent());
     }
 
