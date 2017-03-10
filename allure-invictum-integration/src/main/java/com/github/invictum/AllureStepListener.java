@@ -1,24 +1,30 @@
 package com.github.invictum;
 
 import com.github.invictum.events.StepPendingEvent;
+import com.github.invictum.events.TestCaseCanceledWithMessageEvent;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.Story;
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.steps.ExecutedStepDescription;
 import net.thucydides.core.steps.StepFailure;
 import net.thucydides.core.steps.StepListener;
-import org.apache.commons.lang3.StringUtils;
 import ru.yandex.qatools.allure.Allure;
 import ru.yandex.qatools.allure.events.*;
-import ru.yandex.qatools.allure.utils.AnnotationManager;
 
 import java.util.Map;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 public class AllureStepListener implements StepListener {
 
     private Allure allure = Allure.LIFECYCLE;
-    private String suitUid = StringUtils.EMPTY;
+    private String suitUid = EMPTY;
+    private boolean titleTransformationRequired;
+
+    public AllureStepListener() {
+        titleTransformationRequired = false;
+    }
 
     private String getSuitUid() {
         suitUid = UUID.randomUUID().toString();
@@ -35,6 +41,7 @@ public class AllureStepListener implements StepListener {
     @Override
     public void testSuiteStarted(Class<?> storyClass) {
         allure.fire(new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName()));
+        titleTransformationRequired = true;
     }
 
     @Override
@@ -49,22 +56,25 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testStarted(String description) {
-        TestCaseStartedEvent testCaseStartedEvent = new TestCaseStartedEvent(suitUid, description);
-        allure.fire(AnnotationManager.withExecutorInfo(testCaseStartedEvent));
+        TestCaseStartedEvent event = AnnotationUtil.withEssentialInfo(new TestCaseStartedEvent(suitUid, description));
+        if (titleTransformationRequired) {
+            event = AnnotationUtil.withTitle(event);
+            titleTransformationRequired = false;
+        }
+        allure.fire(AnnotationUtil.withEssentialInfo(event));
     }
 
     @Override
     public void testStarted(String description, String id) {
-        TestCaseStartedEvent testCaseStartedEvent = new TestCaseStartedEvent(suitUid,
-                String.format("%s - %s", id, description));
-        allure.fire(AnnotationManager.withExecutorInfo(testCaseStartedEvent));
+        TestCaseStartedEvent event = new TestCaseStartedEvent(suitUid, description);
+        allure.fire(AnnotationUtil.withEssentialInfo(event));
     }
 
     @Override
     public void testFinished(TestOutcome result) {
-        if (result.getFailingStep().isPresent()) {
+        if (result.isError() || result.isFailure()) {
             TestCaseFailureEvent event = new TestCaseFailureEvent();
-            event.withThrowable(result.getFailingStep().get().getException().toException());
+            event.withThrowable(result.getTestFailureCause().toException());
             allure.fire(event);
         }
         allure.fire(new TestCaseFinishedEvent());
@@ -130,7 +140,7 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testIgnored() {
-        allure.fire(new TestCaseCanceledEvent());
+        allure.fire(new TestCaseCanceledWithMessageEvent().withMessage("Test was marked as ignored"));
         allure.fire(new TestCaseFinishedEvent());
     }
 
