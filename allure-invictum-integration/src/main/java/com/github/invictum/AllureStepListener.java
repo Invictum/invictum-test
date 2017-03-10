@@ -1,7 +1,6 @@
 package com.github.invictum;
 
 import com.github.invictum.events.StepPendingEvent;
-import com.github.invictum.events.StepSkippedEvent;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.Story;
 import net.thucydides.core.model.TestOutcome;
@@ -85,13 +84,12 @@ public class AllureStepListener implements StepListener {
     @Override
     public void skippedStepStarted(ExecutedStepDescription description) {
         allure.fire(new StepStartedEvent(description.getTitle()));
-        allure.fire(new StepSkippedEvent());
-        allure.fire(new StepFinishedEvent());
     }
 
     @Override
     public void stepFailed(StepFailure failure) {
         allure.fire(new StepFailureEvent().withThrowable(failure.getException()));
+        //Attachment should be proceed only inside step?
         makeAttachmentIfPossible(String.format("Step failed: %s", failure.getMessage()));
         allure.fire(new StepFinishedEvent());
     }
@@ -109,14 +107,12 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void stepPending() {
-        allure.fire(new StepStartedEvent(StringUtils.EMPTY));
         allure.fire(new StepPendingEvent());
         allure.fire(new StepFinishedEvent());
     }
 
     @Override
     public void stepPending(String message) {
-        allure.fire(new StepStartedEvent(message));
         allure.fire(new StepPendingEvent());
         allure.fire(new StepFinishedEvent());
     }
@@ -129,7 +125,7 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testFailed(TestOutcome testOutcome, Throwable cause) {
-        allure.fire(new TestCaseFailureEvent().withThrowable(cause));
+        //Method used only with jUnit. Let's handle fail in testFinished method.
     }
 
     @Override
