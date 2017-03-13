@@ -1,8 +1,8 @@
 package com.github.invictum.allure;
 
+import com.github.invictum.allure.annotation.AnnotationUtil;
 import com.github.invictum.allure.events.StepPendingEvent;
 import com.github.invictum.allure.events.TestCaseCanceledWithMessageEvent;
-import com.github.invictum.allure.utils.AnnotationUtil;
 import com.github.invictum.allure.utils.ScreenshotUtil;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.Story;
@@ -22,11 +22,7 @@ public class AllureStepListener implements StepListener {
 
     private Allure allure = Allure.LIFECYCLE;
     private String suitUid = EMPTY;
-    private boolean titleTransformationRequired;
-
-    public AllureStepListener() {
-        titleTransformationRequired = false;
-    }
+    private boolean titleTransformationRequired = true;
 
     private String getSuitUid() {
         suitUid = UUID.randomUUID().toString();
@@ -42,18 +38,21 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testSuiteStarted(Class<?> storyClass) {
-        allure.fire(new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName()));
-        titleTransformationRequired = true;
+        TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName());
+        allure.fire(AnnotationUtil.withClass(event, storyClass));
     }
 
     @Override
     public void testSuiteStarted(Story story) {
-        allure.fire(new TestSuiteStartedEvent(getSuitUid(), story.getStoryName()));
+        TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), story.getStoryName());
+        allure.fire(AnnotationUtil.withStory(event, story));
+        titleTransformationRequired = false;
     }
 
     @Override
     public void testSuiteFinished() {
         allure.fire(new TestSuiteFinishedEvent(suitUid));
+        titleTransformationRequired = true;
     }
 
     @Override
@@ -61,7 +60,6 @@ public class AllureStepListener implements StepListener {
         TestCaseStartedEvent event = AnnotationUtil.withEssentialInfo(new TestCaseStartedEvent(suitUid, description));
         if (titleTransformationRequired) {
             event = AnnotationUtil.withTitle(event);
-            titleTransformationRequired = false;
         }
         allure.fire(AnnotationUtil.withEssentialInfo(event));
     }
