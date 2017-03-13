@@ -1,4 +1,4 @@
-package com.github.invictum;
+package com.github.invictum.allure.utils;
 
 import ru.yandex.qatools.allure.events.TestCaseStartedEvent;
 import ru.yandex.qatools.allure.utils.AnnotationManager;

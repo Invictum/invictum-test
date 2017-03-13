@@ -1,4 +1,4 @@
-package com.github.invictum;
+package com.github.invictum.allure.utils;
 
 import net.thucydides.core.model.TestOutcome;
 import net.thucydides.core.steps.StepEventBus;

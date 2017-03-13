@@ -1,4 +1,4 @@
-package com.github.invictum.events;
+package com.github.invictum.allure.events;
 
 import ru.yandex.qatools.allure.events.AbstractStepCanceledEvent;
 import ru.yandex.qatools.allure.model.Status;

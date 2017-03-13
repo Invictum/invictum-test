@@ -1,7 +1,9 @@
-package com.github.invictum;
+package com.github.invictum.allure;
 
-import com.github.invictum.events.StepPendingEvent;
-import com.github.invictum.events.TestCaseCanceledWithMessageEvent;
+import com.github.invictum.allure.events.StepPendingEvent;
+import com.github.invictum.allure.events.TestCaseCanceledWithMessageEvent;
+import com.github.invictum.allure.utils.AnnotationUtil;
+import com.github.invictum.allure.utils.ScreenshotUtil;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.Story;
 import net.thucydides.core.model.TestOutcome;
