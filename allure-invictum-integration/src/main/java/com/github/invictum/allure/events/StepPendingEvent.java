@@ -1,13 +1,13 @@
-package com.github.invictum.events;
+package com.github.invictum.allure.events;
 
 import ru.yandex.qatools.allure.events.AbstractStepCanceledEvent;
 import ru.yandex.qatools.allure.model.Status;
 import ru.yandex.qatools.allure.model.Step;
 
-public class StepSkippedEvent extends AbstractStepCanceledEvent {
+public class StepPendingEvent extends AbstractStepCanceledEvent {
 
     @Override
     public void process(Step context) {
-        context.setStatus(Status.SKIPPED);
+        context.setStatus(Status.PENDING);
     }
 }
