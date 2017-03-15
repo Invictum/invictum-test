@@ -43,4 +43,20 @@ public class PropertiesUtil {
     public static String getProperty(EnhancedSystemProperty property) {
         return config.getString(property.toString(), property.defaultValue());
     }
+
+    public static String getProperty(ThucydidesSystemProperty property) {
+        return config.getString(property.toString());
+    }
+
+    public static PropertyValue getPropertyValue(String key) {
+        return new PropertyValue(getProperty(key));
+    }
+
+    public static PropertyValue getPropertyValue(EnhancedSystemProperty property) {
+        return new PropertyValue(getProperty(property));
+    }
+
+    public static PropertyValue getPropertyValue(ThucydidesSystemProperty property) {
+        return new PropertyValue(getProperty(property));
+    }
 }
