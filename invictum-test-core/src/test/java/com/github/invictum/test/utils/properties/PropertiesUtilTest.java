@@ -1,4 +1,4 @@
-package com.github.invictum.test.utils;
+package com.github.invictum.test.utils.properties;
 
 import com.github.invictum.utils.properties.PropertiesUtil;
 import org.apache.commons.configuration.CompositeConfiguration;
