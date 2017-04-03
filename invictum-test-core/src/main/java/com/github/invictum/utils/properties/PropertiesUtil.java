@@ -9,6 +9,9 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PropertiesUtil {
 
     private static CompositeConfiguration config = new CompositeConfiguration();
@@ -44,19 +47,15 @@ public class PropertiesUtil {
         return config.getString(property.toString(), property.defaultValue());
     }
 
-    public static String getProperty(ThucydidesSystemProperty property) {
-        return config.getString(property.toString());
+    public static List<String> getPropertyAsList(String key) {
+        List<String> properties = new ArrayList<>();
+        for (Object object : config.getList(key, null)) {
+            properties.add((String) object);
+        }
+        return properties;
     }
 
-    public static PropertyValue getPropertyValue(String key) {
-        return new PropertyValue(getProperty(key));
-    }
-
-    public static PropertyValue getPropertyValue(EnhancedSystemProperty property) {
-        return new PropertyValue(getProperty(property));
-    }
-
-    public static PropertyValue getPropertyValue(ThucydidesSystemProperty property) {
-        return new PropertyValue(getProperty(property));
+    public static List<String> getPropertyAsList(EnhancedSystemProperty property) {
+        return getPropertyAsList(property.toString());
     }
 }

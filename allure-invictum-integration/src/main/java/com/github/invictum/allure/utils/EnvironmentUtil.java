@@ -1,6 +1,7 @@
 package com.github.invictum.allure.utils;
 
 import com.github.invictum.utils.properties.PropertiesUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.yandex.qatools.allure.config.AllureConfig;
@@ -9,6 +10,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
+
+import static com.github.invictum.utils.properties.EnhancedSystemProperty.AllureEnvironmentCustomProperties;
 
 public class EnvironmentUtil {
 
@@ -23,6 +26,11 @@ public class EnvironmentUtil {
         addProperty("Project", "serenity.project.name");
         addProperty("Browser", "webdriver.driver");
         addProperty("URL", "webdriver.base.url");
+        //add users properties
+        for (String option : PropertiesUtil.getPropertyAsList(AllureEnvironmentCustomProperties)) {
+            String key = StringUtils.replace(option, ".", " ");
+            addProperty(StringUtils.capitalize(key), option);
+        }
     }
 
     private static void addProperty(String key, String property) {
