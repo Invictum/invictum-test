@@ -3,6 +3,7 @@ package com.github.invictum.allure;
 import com.github.invictum.allure.annotation.AnnotationUtil;
 import com.github.invictum.allure.events.StepPendingEvent;
 import com.github.invictum.allure.events.TestCaseCanceledWithMessageEvent;
+import com.github.invictum.allure.utils.EnvironmentUtil;
 import com.github.invictum.allure.utils.ScreenshotUtil;
 import net.thucydides.core.model.DataTable;
 import net.thucydides.core.model.Story;
@@ -23,6 +24,10 @@ public class AllureStepListener implements StepListener {
     private Allure allure = Allure.LIFECYCLE;
     private String suitUid = EMPTY;
     private boolean titleTransformationRequired = true;
+
+    public AllureStepListener() {
+        EnvironmentUtil.create();
+    }
 
     private String getSuitUid() {
         suitUid = UUID.randomUUID().toString();
