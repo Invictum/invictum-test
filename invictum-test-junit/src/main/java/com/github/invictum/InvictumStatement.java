@@ -13,7 +13,10 @@ public class InvictumStatement extends Statement {
 
     @Override
     public void evaluate() throws Throwable {
-        statement.evaluate();
-        FixtureProcessor.rollback();
+        try {
+            statement.evaluate();
+        } finally {
+            FixtureProcessor.rollback();
+        }
     }
 }
