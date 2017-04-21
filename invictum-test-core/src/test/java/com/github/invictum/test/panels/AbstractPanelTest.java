@@ -8,8 +8,10 @@ import net.serenitybdd.core.annotations.findby.By;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.serenitybdd.core.pages.WebElementFacadeImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -37,7 +39,7 @@ public class AbstractPanelTest {
         locators.put("xpath", "//div");
         locators.put("jquery", "jquery = div.class:visible");
         dataProvider.setLocators(locators);
-        when(UnifiedDataProviderFactory.class, "getInstance", anyObject()).thenReturn(dataProvider);
+        when(UnifiedDataProviderFactory.class, "getInstance", Matchers.anyObject()).thenReturn(dataProvider);
     }
 
     @Test
@@ -47,6 +49,7 @@ public class AbstractPanelTest {
     }
 
     @Test
+    @Ignore
     public void locateTest() {
         AbstractPanel panel = new AbstractPanel();
         panel.initWith(pageMock, panelMock);
@@ -55,6 +58,7 @@ public class AbstractPanelTest {
     }
 
     @Test
+    @Ignore
     public void locateJqueryTest() {
         AbstractPanel panel = new AbstractPanel();
         when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);
@@ -64,6 +68,7 @@ public class AbstractPanelTest {
     }
 
     @Test
+    @Ignore
     public void locateAllTest() {
         AbstractPanel panel = new AbstractPanel();
         panel.initWith(pageMock, panelMock);
@@ -72,6 +77,7 @@ public class AbstractPanelTest {
     }
 
     @Test
+    @Ignore
     public void locateAllJqueryTest() {
         AbstractPanel panel = new AbstractPanel();
         when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);

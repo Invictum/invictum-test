@@ -49,13 +49,16 @@ public class UnifiedDataProviderFactory {
     }
 
     public static UnifiedDataProvider getInstance(final Object relatedObject) {
-        Class relatedClass = relatedObject.getClass();
+        return getInstance(relatedObject.getClass());
+    }
+
+    public static UnifiedDataProvider getInstance(final Class relatedClass) {
         if (!locatorProviders.containsKey(relatedClass)) {
             UnifiedDataProvider dataProvider = parser.load(relatedClass.getSimpleName());
-            if (relatedObject instanceof AbstractPage) {
+            if (AbstractPage.class.isAssignableFrom(relatedClass)) {
                 dataProvider.setLocators(mergeLocators(relatedClass, AbstractPage.class));
             }
-            if (relatedObject instanceof AbstractPanel) {
+            if (AbstractPanel.class.isAssignableFrom(relatedClass)) {
                 dataProvider.setLocators(mergeLocators(relatedClass, AbstractPanel.class));
             }
             dataProvider.setRelatedClassName(relatedClass.getSimpleName());
