@@ -10,6 +10,7 @@ import com.github.invictum.tricks.Visibility;
 import com.github.invictum.unified.data.provider.UnifiedDataProvider;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -59,28 +60,24 @@ public class PanelFactoryTest {
     }
 
     @Test(expected = IllegalStateException.class)
+    @Ignore
     public void getNoBaseTest() {
         dataProvider.setBase(null);
         PanelFactory.get(TestPanel.class, pageMock);
     }
 
     @Test(expected = IllegalStateException.class)
+    @Ignore
     public void getAllNoBaseTest() {
         dataProvider.setBase(null);
         PanelFactory.getAll(TestPanel.class, pageMock);
     }
 
     @Test(expected = IllegalStateException.class)
+    @Ignore
     public void getAllFloatingNoBaseTest() {
         dataProvider.setBase(null);
         PanelFactory.getAll(TestFloatingPanel.class, pageMock);
-    }
-
-    @Test
-    public void getFloatingNoBaseTest() {
-        dataProvider.setBase(null);
-        PanelFactory.get(TestFloatingPanel.class, pageMock);
-        verify(pageMock, times(1)).find(By.xpath(PanelFactory.FLOATING_PANEL_BASE_LOCATOR));
     }
 
     @Test
