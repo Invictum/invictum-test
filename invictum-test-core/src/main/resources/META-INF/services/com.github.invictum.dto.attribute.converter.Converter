@@ -6,3 +6,5 @@ com.github.invictum.dto.attribute.converter.converters.FloatConverter
 com.github.invictum.dto.attribute.converter.converters.DoubleConverter
 com.github.invictum.dto.attribute.converter.converters.EnumConverter
 com.github.invictum.dto.attribute.converter.converters.DtoConverter
+com.github.invictum.dto.attribute.converter.converters.ListConverter
+com.github.invictum.dto.attribute.converter.converters.SetConverter
