@@ -6,6 +6,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static com.github.invictum.dto.attribute.converter.ConverterUtil.convert;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,5 +56,30 @@ public class ConverterUtilTest {
     @Test
     public void convertUnknownTest() {
         assertThat("Unknown type is converted wrong.", convert(new Attribute("key", "value")), equalTo(null));
+    }
+
+    @Test
+    public void convertListTest() {
+        List<String> candidate = new ArrayList<>();
+        candidate.add("one");
+        candidate.add("two");
+        assertThat("List is converted wrong.", convert(candidate), equalTo("[one, two]"));
+    }
+
+    @Test
+    public void convertListWithNullTest() {
+        List<String> candidate = new ArrayList<>();
+        candidate.add("one");
+        candidate.add(null);
+        candidate.add("two");
+        assertThat("List is converted wrong.", convert(candidate), equalTo("[one, null, two]"));
+    }
+
+    @Test
+    public void convertSetTest() {
+        Set<String> candidate = new HashSet<>();
+        candidate.add("1");
+        candidate.add("2");
+        assertThat("Set is converted wrong.", convert(candidate), equalTo("[1, 2]"));
     }
 }
