@@ -8,6 +8,10 @@ import java.lang.reflect.Proxy;
 
 public class LazyPanelElementFactory {
 
+    private LazyPanelElementFactory() {
+        //disabled constructor
+    }
+
     public static WebElementFacade produce(AbstractPage page, By locator) {
         LazyPanelHandler handler = new LazyPanelHandler(page, locator);
         return (WebElementFacade) Proxy.newProxyInstance(LazyPanelElementFactory.class
