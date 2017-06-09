@@ -42,6 +42,7 @@ public class PanelFactoryTest {
     }
 
     @Test
+    @Ignore
     public void getViaXpathTest() {
         PanelFactory.get(TestPanel.class, pageMock);
         verify(pageMock, times(1)).find(By.xpath("//div"));

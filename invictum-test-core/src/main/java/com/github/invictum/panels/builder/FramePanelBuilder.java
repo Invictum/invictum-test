@@ -19,7 +19,7 @@ public class FramePanelBuilder<T extends AbstractPanel> extends PanelBuilder<T> 
         // Start panel init
         getPage().activateIfJQueryRelated(locator());
         PanelInitUtil.applyGlobalInitStrategy(panelClass(), getPage());
-        // Build panel as proxy
+        // Build panel as a proxy with auto switch
         Enhancer enhancer = new Enhancer();
         enhancer.setClassLoader(panelClass().getClassLoader());
         enhancer.setSuperclass(panelClass());

@@ -3,6 +3,7 @@ package com.github.invictum.panels.builder;
 import com.github.invictum.locator.factory.LocatorFactory;
 import com.github.invictum.panels.AbstractPanel;
 import com.github.invictum.panels.init.PanelInitUtil;
+import com.github.invictum.panels.proxy.LazyPanelElementFactory;
 import com.github.invictum.unified.data.provider.UnifiedDataProviderFactory;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
@@ -18,30 +19,23 @@ public class FloatingPanelBuilder<T extends AbstractPanel> extends PanelBuilder<
 
     @Override
     public T build() {
-        String base = UnifiedDataProviderFactory.getInstance(panelClass()).getBase();
-        String locator = (base == null) ? "//body" : base;
-        By panelLocator = LocatorFactory.build(locator);
-        getPage().activateIfJQueryRelated(panelLocator);
-        WebElementFacade panel = getPage().find(panelLocator);
+        getPage().activateIfJQueryRelated(locator());
         PanelInitUtil.applyGlobalInitStrategy(panelClass(), getPage());
         T panelInstance = assemblePanelWithReflection();
-        panelInstance.initWith(getPage(), panel);
+        panelInstance.initWith(getPage(), LazyPanelElementFactory.produce(getPage(), locator()));
         PanelInitUtil.invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
     }
 
     @Override
     public List<T> buildAll() {
-        String locator = UnifiedDataProviderFactory.getInstance(panelClass()).getBase();
-        if (locator == null) {
+        if (UnifiedDataProviderFactory.getInstance(panelClass()).getBase() == null) {
             throw new IllegalStateException(String
-                    .format("Attempt to init a list of % Floating Panels", panelClass().getSimpleName()));
+                    .format("Attempt to init a list of %s Floating Panels", panelClass().getSimpleName()));
         }
-        By panelLocator = LocatorFactory.build(locator);
-        getPage().activateIfJQueryRelated(panelLocator);
-        List<WebElementFacade> panels = getPage().findAll(panelLocator);
+        getPage().activateIfJQueryRelated(locator());
         PanelInitUtil.applyGlobalInitStrategy(panelClass(), getPage());
-
+        List<WebElementFacade> panels = getPage().findAll(locator());
         List<T> panelList = new ArrayList<>();
         for (WebElementFacade element : panels) {
             T panel = assemblePanelWithReflection();

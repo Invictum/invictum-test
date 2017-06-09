@@ -2,6 +2,7 @@ package com.github.invictum.panels.builder;
 
 import com.github.invictum.panels.AbstractPanel;
 import com.github.invictum.panels.init.PanelInitUtil;
+import com.github.invictum.panels.proxy.LazyPanelElementFactory;
 import net.serenitybdd.core.pages.WebElementFacade;
 
 import java.util.ArrayList;
@@ -16,10 +17,9 @@ public class RegularPanelBuilder<T extends AbstractPanel> extends PanelBuilder<T
     @Override
     public T build() {
         getPage().activateIfJQueryRelated(locator());
-        WebElementFacade panel = getPage().find(locator());
         PanelInitUtil.applyGlobalInitStrategy(panelClass(), getPage());
         T panelInstance = assemblePanelWithReflection();
-        panelInstance.initWith(getPage(), panel);
+        panelInstance.initWith(getPage(), LazyPanelElementFactory.produce(getPage(), locator()));
         PanelInitUtil.invokeWhenInitializedMethods(panelInstance);
         return panelInstance;
     }
