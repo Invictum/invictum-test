@@ -1,5 +1,6 @@
 package com.github.invictum.allure.annotation;
 
+import com.github.invictum.allure.issue.IssueProcessor;
 import net.thucydides.core.model.Story;
 import ru.yandex.qatools.allure.config.AllureModelUtils;
 import ru.yandex.qatools.allure.events.TestCaseStartedEvent;
@@ -35,5 +36,19 @@ public class AnnotationUtil {
         return event
                 .withLabels(createTestFrameworkLabel(BDD), createStoryLabel(story.getName()), createFeatureLabel(story
                         .getName()));
+    }
+
+    public static TestSuiteStartedEvent withIssues(TestSuiteStartedEvent event, IssueProcessor issueProcessor) {
+        for (String issue : issueProcessor.collectTestIssues()) {
+            event.withLabels(createIssueLabel(issue));
+        }
+        return event;
+    }
+
+    public static TestCaseStartedEvent withIssues(TestCaseStartedEvent event, IssueProcessor issueProcessor) {
+        for (String issue : issueProcessor.collectMethodIssues(event.getName())) {
+            event.withLabels(createIssueLabel(issue));
+        }
+        return event;
     }
 }

@@ -3,6 +3,9 @@ package com.github.invictum.allure;
 import com.github.invictum.allure.annotation.AnnotationUtil;
 import com.github.invictum.allure.events.StepPendingEvent;
 import com.github.invictum.allure.events.TestCaseCanceledWithMessageEvent;
+import com.github.invictum.allure.issue.ClassIssueProcessor;
+import com.github.invictum.allure.issue.IssueProcessor;
+import com.github.invictum.allure.issue.StoryIssueProcessor;
 import com.github.invictum.allure.utils.EnvironmentUtil;
 import com.github.invictum.allure.utils.ScreenshotUtil;
 import net.thucydides.core.model.DataTable;
@@ -24,6 +27,7 @@ public class AllureStepListener implements StepListener {
     private Allure allure = Allure.LIFECYCLE;
     private String suitUid = EMPTY;
     private boolean titleTransformationRequired = true;
+    private IssueProcessor issueProcessor;
 
     public AllureStepListener() {
         EnvironmentUtil.create();
@@ -43,12 +47,15 @@ public class AllureStepListener implements StepListener {
 
     @Override
     public void testSuiteStarted(Class<?> storyClass) {
+        issueProcessor = new ClassIssueProcessor(storyClass);
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), storyClass.getSimpleName());
+        event = AnnotationUtil.withIssues(event, issueProcessor);
         allure.fire(AnnotationUtil.withClass(event, storyClass));
     }
 
     @Override
     public void testSuiteStarted(Story story) {
+        issueProcessor = new StoryIssueProcessor(story);
         TestSuiteStartedEvent event = new TestSuiteStartedEvent(getSuitUid(), story.getStoryName());
         allure.fire(AnnotationUtil.withStory(event, story));
         titleTransformationRequired = false;
@@ -66,12 +73,14 @@ public class AllureStepListener implements StepListener {
         if (titleTransformationRequired) {
             event = AnnotationUtil.withTitle(event);
         }
+        event = AnnotationUtil.withIssues(event, issueProcessor);
         allure.fire(AnnotationUtil.withEssentialInfo(event));
     }
 
     @Override
     public void testStarted(String description, String id) {
         TestCaseStartedEvent event = new TestCaseStartedEvent(suitUid, description);
+        event = AnnotationUtil.withIssues(event, issueProcessor);
         allure.fire(AnnotationUtil.withEssentialInfo(event));
     }
 

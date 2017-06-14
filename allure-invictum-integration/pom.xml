@@ -14,7 +14,7 @@
     <description>Integration with allure reporting framework.</description>
 
     <properties>
-        <allure.version>1.5.2</allure.version>
+        <allure.version>1.5.4</allure.version>
     </properties>
 
     <dependencies>
