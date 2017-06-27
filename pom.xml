@@ -51,7 +51,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <serenity.version>1.2.4</serenity.version>
+        <serenity.version>1.4.0</serenity.version>
         <serenity.jbehave.version>1.24.0</serenity.jbehave.version>
     </properties>
 
