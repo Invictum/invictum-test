@@ -3,7 +3,7 @@
     <parent>
         <artifactId>invictum-test</artifactId>
         <groupId>com.github.invictum</groupId>
-        <version>1.5-SNAPSHOT</version>
+        <version>1.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.invictum</groupId>
             <artifactId>invictum-test-core</artifactId>
-            <version>1.5-SNAPSHOT</version>
+            <version>1.5</version>
         </dependency>
         <dependency>
             <groupId>net.serenity-bdd</groupId>
