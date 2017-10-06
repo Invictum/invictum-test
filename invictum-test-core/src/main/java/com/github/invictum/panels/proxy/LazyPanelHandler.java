@@ -18,6 +18,16 @@ public class LazyPanelHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return method.invoke(page.find(locator), args);
+        Object invoked;
+        try {
+            invoked = method.invoke(page.find(locator), args);
+        }
+        catch (Exception e) {
+            if (e.getCause() != null) {
+                throw e.getCause();
+            }
+            throw e;
+        }
+        return invoked;
     }
 }
