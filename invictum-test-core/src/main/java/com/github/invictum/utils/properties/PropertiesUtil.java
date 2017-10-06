@@ -49,7 +49,7 @@ public class PropertiesUtil {
 
     public static List<String> getPropertyAsList(String key) {
         List<String> properties = new ArrayList<>();
-        for (Object object : config.getList(key, null)) {
+        for (Object object : config.getList(key, new ArrayList<>())) {
             properties.add((String) object);
         }
         return properties;
