@@ -1,6 +1,7 @@
 package com.github.invictum.panels.proxy;
 
 import com.github.invictum.pages.AbstractPage;
+import net.serenitybdd.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
 
 import java.lang.reflect.InvocationHandler;
@@ -18,6 +19,11 @@ public class LazyPanelHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return method.invoke(page.find(locator), args);
+        try {
+            WebElementFacade webElement = page.find(locator);
+            return method.invoke(webElement, args);
+        } catch (Exception e) {
+            throw e.getCause() == null ? e : e.getCause();
+        }
     }
 }
