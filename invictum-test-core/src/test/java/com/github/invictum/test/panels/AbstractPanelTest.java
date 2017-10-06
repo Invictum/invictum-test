@@ -8,7 +8,6 @@ import net.serenitybdd.core.annotations.findby.By;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.serenitybdd.core.pages.WebElementFacadeImpl;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -28,6 +27,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({UnifiedDataProviderFactory.class})
 public class AbstractPanelTest {
 
+    private AbstractPanel panel;
+
     private AbstractPage pageMock = mock(AbstractPage.class);
     private WebElementFacade panelMock = mock(WebElementFacadeImpl.class);
 
@@ -40,48 +41,37 @@ public class AbstractPanelTest {
         locators.put("jquery", "jquery = div.class:visible");
         dataProvider.setLocators(locators);
         when(UnifiedDataProviderFactory.class, "getInstance", Matchers.anyObject()).thenReturn(dataProvider);
+        panel = new AbstractPanel();
+        panel.initWith(pageMock, panelMock);
     }
 
     @Test
     public void toStringTest() {
-        AbstractPanel panel = new AbstractPanel();
         assertThat("To string method value is wrong.", panel.toString(), equalTo("AbstractPanel"));
     }
 
     @Test
-    @Ignore
     public void locateTest() {
-        AbstractPanel panel = new AbstractPanel();
-        panel.initWith(pageMock, panelMock);
         panel.locate("xpath");
         verify(panelMock, times(1)).find(By.xpath(".//div"));
     }
 
     @Test
-    @Ignore
     public void locateJqueryTest() {
-        AbstractPanel panel = new AbstractPanel();
         when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);
-        panel.initWith(pageMock, panelMock);
         panel.locate("jquery");
         verify(pageMock, times(1)).find(By.jquery("div.class:visible"));
     }
 
     @Test
-    @Ignore
     public void locateAllTest() {
-        AbstractPanel panel = new AbstractPanel();
-        panel.initWith(pageMock, panelMock);
         panel.locateAll("xpath");
         verify(panelMock, times(1)).thenFindAll(By.xpath(".//div"));
     }
 
     @Test
-    @Ignore
     public void locateAllJqueryTest() {
-        AbstractPanel panel = new AbstractPanel();
         when(pageMock.activateIfJQueryRelated(By.jquery("div.class:visible"))).thenReturn(true);
-        panel.initWith(pageMock, panelMock);
         panel.locateAll("jquery");
         verify(pageMock, times(1)).findAll(By.jquery("div.class:visible"));
     }
