@@ -4,7 +4,7 @@
 package ${package};
 
 import com.github.invictum.EnhancedSerenityRunner;
-import com.jayway.restassured.specification.RequestSpecification;
+import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import net.thucydides.core.annotations.WithTagValuesOf;
 import org.junit.BeforeClass;
