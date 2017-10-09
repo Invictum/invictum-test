@@ -7,7 +7,7 @@
 
     <requiredProperties>
         <requiredProperty key="invictumVersion">
-            <defaultValue>1.5</defaultValue>
+            <defaultValue>1.6</defaultValue>
         </requiredProperty>
     </requiredProperties>
     <fileSets>
