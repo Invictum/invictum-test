@@ -1,6 +1,5 @@
 package com.github.invictum.allure.issue;
 
-import com.google.common.base.Optional;
 import net.thucydides.core.annotations.TestAnnotations;
 
 import java.util.Arrays;
@@ -36,10 +35,7 @@ public class ClassIssueProcessor implements IssueProcessor {
         if (list != null) {
             issues.addAll(Arrays.asList(list));
         }
-        Optional<String> issue = testAnnotations.getAnnotatedIssueForMethod(methodName);
-        if (issue.isPresent()) {
-            issues.add(issue.get());
-        }
+        testAnnotations.getAnnotatedIssueForMethod(methodName).ifPresent(issues::add);
         return issues;
     }
 }

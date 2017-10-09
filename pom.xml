@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.invictum</groupId>
@@ -51,8 +52,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <serenity.version>1.4.0</serenity.version>
-        <serenity.jbehave.version>1.24.0</serenity.jbehave.version>
+        <serenity.version>1.6.3</serenity.version>
+        <serenity.jbehave.version>1.30.0</serenity.jbehave.version>
     </properties>
 
     <dependencies>
@@ -98,8 +99,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <target>1.7</target>
-                    <source>1.7</source>
+                    <target>1.8</target>
+                    <source>1.8</source>
                 </configuration>
             </plugin>
             <plugin>
