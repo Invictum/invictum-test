@@ -1,6 +1,9 @@
 Allure integration setup
 --------
 
+ >**Warning**
+ >Module is marked as deprecated and scheduled to remove. Use https://github.com/Invictum/serenity-allure-integration instead
+
  Use following steps to setup allure reporting:
   1) Add integration dependency to your POM file
 ```
