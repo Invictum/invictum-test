@@ -12,7 +12,7 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.batches.BatchManager;
 import net.thucydides.core.batches.BatchManagerProvider;
 import net.thucydides.core.guice.Injectors;
-import net.thucydides.core.webdriver.Configuration;
+import net.thucydides.core.webdriver.DriverConfiguration;
 import net.thucydides.core.webdriver.WebDriverFactory;
 import net.thucydides.core.webdriver.WebdriverManager;
 import org.junit.runners.model.FrameworkMethod;
@@ -35,16 +35,16 @@ public class EnhancedSerenityRunner extends SerenityRunner {
 
     public EnhancedSerenityRunner(final Class<?> klass, final WebDriverFactory webDriverFactory)
             throws InitializationError {
-        super(klass, webDriverFactory, Injectors.getInjector().getInstance(Configuration.class));
+        super(klass, webDriverFactory, Injectors.getInjector().getInstance(DriverConfiguration.class));
     }
 
     public EnhancedSerenityRunner(final Class<?> klass, final WebDriverFactory webDriverFactory,
-            final Configuration configuration) throws InitializationError {
+            final DriverConfiguration configuration) throws InitializationError {
         super(klass, webDriverFactory, configuration, new BatchManagerProvider(configuration).get());
     }
 
     public EnhancedSerenityRunner(final Class<?> klass, final WebDriverFactory webDriverFactory,
-            final Configuration configuration, final BatchManager batchManager) throws InitializationError {
+            final DriverConfiguration configuration, final BatchManager batchManager) throws InitializationError {
         super(klass, webDriverFactory, configuration, batchManager);
     }
 
@@ -53,7 +53,7 @@ public class EnhancedSerenityRunner extends SerenityRunner {
     }
 
     public EnhancedSerenityRunner(final Class<?> klass, final WebdriverManager webDriverManager,
-            final Configuration configuration, final BatchManager batchManager) throws InitializationError {
+            final DriverConfiguration configuration, final BatchManager batchManager) throws InitializationError {
         super(klass, webDriverManager, configuration, batchManager);
     }
 

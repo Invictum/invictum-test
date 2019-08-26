@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.openqa.selenium.By;
 
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -72,7 +72,7 @@ public class SafePickerTest {
     public void defaultTimeoutValuePickTest() {
         when(pageMock.find(xpathLocator)).thenThrow(new RuntimeException());
         sud.pick(xpathLocator);
-        verify(pageMock, times(1)).setImplicitTimeout(100, TimeUnit.MILLISECONDS);
+        verify(pageMock, times(1)).setImplicitTimeout(100, ChronoUnit.MILLIS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
 
@@ -80,7 +80,7 @@ public class SafePickerTest {
     public void customTimeoutValuePickTest() {
         when(pageMock.find(cssLocator)).thenThrow(new RuntimeException());
         sud.withTimeout(200).pick(cssLocator);
-        verify(pageMock, times(1)).setImplicitTimeout(200, TimeUnit.MILLISECONDS);
+        verify(pageMock, times(1)).setImplicitTimeout(200, ChronoUnit.MILLIS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
 }

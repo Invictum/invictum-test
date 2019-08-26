@@ -6,7 +6,7 @@ import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Allows to get Web Element text gracefully.
@@ -43,7 +43,7 @@ public class SafePicker extends AbstractTrick {
     public String pick(By locator) {
         LOG.debug("Safe pick for {} with {} default value", locator, defaultValue);
         String resultValue = defaultValue;
-        context().setImplicitTimeout(waitTimeout, TimeUnit.MILLISECONDS);
+        context().setImplicitTimeout(waitTimeout, ChronoUnit.MILLIS);
         try {
             WebElementFacade element = (searchContext == null) ? context().find(locator) : searchContext.find(locator);
             resultValue = element.getText();
