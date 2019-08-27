@@ -13,8 +13,8 @@ import org.reflections.util.ClasspathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static com.github.invictum.utils.properties.EnhancedSystemProperty.PagesPackageName;
 
@@ -88,7 +88,7 @@ public class PageNavigationSteps extends AbstractSteps {
     }
 
     private void open(AbstractPage page, String... parameters) {
-        page.setImplicitTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
+        page.setImplicitTimeout(TIMEOUT, ChronoUnit.MILLIS);
         page.open(parameters);
         page.resetImplicitTimeout();
     }

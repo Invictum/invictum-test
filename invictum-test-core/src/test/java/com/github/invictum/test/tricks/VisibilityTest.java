@@ -10,9 +10,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.openqa.selenium.By;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -70,7 +70,7 @@ public class VisibilityTest {
         when(webElementMock.isVisible()).thenReturn(true);
         when(pageMock.findAll(xpathLocator)).thenReturn(elementsMock);
         sud.isElementVisible(xpathLocator);
-        verify(pageMock, times(1)).setImplicitTimeout(500, TimeUnit.MILLISECONDS);
+        verify(pageMock, times(1)).setImplicitTimeout(500, ChronoUnit.MILLIS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
 
@@ -81,7 +81,7 @@ public class VisibilityTest {
         when(webElementMock.isVisible()).thenReturn(true);
         when(pageMock.findAll(cssLocator)).thenReturn(elementsMock);
         sud.isElementVisible(cssLocator, null, 1000);
-        verify(pageMock, times(1)).setImplicitTimeout(1000, TimeUnit.MILLISECONDS);
+        verify(pageMock, times(1)).setImplicitTimeout(1000, ChronoUnit.MILLIS);
         verify(pageMock, times(1)).resetImplicitTimeout();
     }
 }

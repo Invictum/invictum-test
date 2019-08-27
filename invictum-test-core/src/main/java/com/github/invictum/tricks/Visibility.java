@@ -4,8 +4,8 @@ import com.github.invictum.tricks.core.AbstractTrick;
 import net.serenitybdd.core.pages.WebElementFacade;
 import org.openqa.selenium.By;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Allows to determinate Web Element visibility gracefully.
@@ -23,7 +23,7 @@ public class Visibility extends AbstractTrick {
 
     public boolean isElementVisible(By locator, WebElementFacade element, int timeout) {
         boolean isVisible;
-        context().setImplicitTimeout(timeout, TimeUnit.MILLISECONDS);
+        context().setImplicitTimeout(timeout, ChronoUnit.MILLIS);
         if (element == null) {
             isVisible = checkElementsVisibility(context().findAll(locator));
         } else {
